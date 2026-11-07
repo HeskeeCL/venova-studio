@@ -1,0 +1,1814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Venova Studio</title>
+<meta name="description" content="Learn the Yamaha Venova YVS-100 from zero in 30 days: lessons, fingering chart with sound, play-along songs, tuner and a daily plan.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Venova">
+<meta name="theme-color" content="#F1F4F7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F151C" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Layout: one column, bottom tab bar, bottom sheets for players. One accent (Venova yellow); each note letter keeps its own colour everywhere. */
+  --bg:#F1F4F7; --surface:#FFFFFF; --surface-2:#E7ECF1; --ink:#16202B; --muted:#5A6977; --line:#D3DBE3;
+  --accent:#F2B900; --accent-ink:#2B2300; --accent-soft:#FFF3C4;
+  --good:#2E9D5E; --good-soft:#DDF3E6; --warn:#D98A00; --warn-soft:#FFEFD1; --bad:#D9484A; --bad-soft:#FBE1E1;
+  --hand-l:#3F6FD8; --hand-r:#D8663F;
+  --body:#F8F8F4; --key:#262B32;
+  --font-display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --font-body:"Atkinson Hyperlegible","Helvetica Neue",Arial,system-ui,sans-serif;
+  --radius:14px; --shadow:0 1px 2px rgba(22,32,43,.05),0 8px 24px -16px rgba(22,32,43,.28);
+  --nav-h:64px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F151C; --surface:#182129; --surface-2:#1F2A34; --ink:#EEF2F6; --muted:#9EACBA; --line:#2B3744;
+    --accent:#FFC933; --accent-ink:#2B2300; --accent-soft:#3A3010;
+    --good:#4CC27E; --good-soft:#15301F; --warn:#F0A83A; --warn-soft:#3A2A0E; --bad:#F06B6D; --bad-soft:#3C1A1B;
+    --hand-l:#7EA0F2; --hand-r:#F0906A;
+    --body:#2A333E; --key:#0B0E12;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 24px -16px rgba(0,0,0,.6);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F151C; --surface:#182129; --surface-2:#1F2A34; --ink:#EEF2F6; --muted:#9EACBA; --line:#2B3744;
+  --accent:#FFC933; --accent-ink:#2B2300; --accent-soft:#3A3010;
+  --good:#4CC27E; --good-soft:#15301F; --warn:#F0A83A; --warn-soft:#3A2A0E; --bad:#F06B6D; --bad-soft:#3C1A1B;
+  --hand-l:#7EA0F2; --hand-r:#F0906A;
+  --body:#2A333E; --key:#0B0E12;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 24px -16px rgba(0,0,0,.6);
+  color-scheme:dark;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{height:100%;-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font:16px/1.5 var(--font-body);padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom));overscroll-behavior-y:contain}
+h1,h2,h3,h4{font-family:var(--font-display);line-height:1.15;margin:0;text-wrap:balance}
+h1{font-size:26px;font-weight:800} h2{font-size:21px;font-weight:700} h3{font-size:17px;font-weight:700}
+p{margin:0 0 10px} p:last-child{margin-bottom:0}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+button,a,.tile,.chip,.day-chip{touch-action:manipulation}
+input,select,textarea{font-size:16px}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:760px;margin:0 auto;padding:calc(12px + env(safe-area-inset-top)) 16px 4px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand-mark{width:34px;height:34px;border-radius:10px;background:var(--accent);display:grid;place-items:center;color:var(--accent-ink);flex:none}
+.brand h1{font-size:19px;white-space:nowrap}
+.brand small{display:block;color:var(--muted);font-size:12px;line-height:1.2;white-space:nowrap}
+.avatar-btn{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 12px 4px 4px;cursor:pointer;min-height:40px;max-width:46%}
+.avatar-btn span.n{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.avatar{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-family:var(--font-display);font-weight:800;color:#fff;font-size:15px;flex:none}
+
+main{max-width:760px;margin:0 auto;padding:10px 16px 24px}
+.view{display:none} .view.active{display:block}
+.stack{display:grid;gap:14px;grid-template-columns:minmax(0,1fr)}
+.stack>*{min-width:0;max-width:100%}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.card.hero{border-top:5px solid var(--accent)}
+.card h2,.card h3{margin-bottom:8px}
+.muted{color:var(--muted)} .small{font-size:13px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center} .between{justify-content:space-between}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid-2>*{min-width:0}
+@media (max-width:420px){.grid-2{grid-template-columns:1fr}}
+
+.btn{appearance:none;border:1px solid transparent;border-radius:12px;padding:11px 16px;background:var(--accent);color:var(--accent-ink);font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;min-height:44px;transition:transform .08s ease,background .15s}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:var(--surface);border-color:var(--line);color:var(--ink)}
+.btn.quiet{background:var(--surface-2);color:var(--ink)}
+.btn.danger{background:var(--bad-soft);color:var(--bad)}
+.btn.sm{padding:7px 12px;min-height:36px;font-size:14px;border-radius:10px}
+.btn.block{width:100%;justify-content:center}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.btn svg{width:18px;height:18px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:14px;cursor:pointer;min-height:34px}
+.chip.on{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.badge{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--muted)}
+.badge.w1{background:#DDF3E6;color:#1E6B3F}.badge.w2{background:#DCE9FB;color:#214E9A}.badge.w3{background:#F7E4F5;color:#7A2B70}.badge.w4{background:#FFEFD1;color:#7A4B00}
+.badge.approx{background:var(--warn-soft);color:var(--warn)}
+.badge.good{background:var(--good-soft);color:var(--good)}
+.tile{display:inline-grid;place-items:center;border-radius:12px;font-family:var(--font-display);font-weight:800;line-height:1;position:relative;user-select:none;-webkit-user-select:none}
+.tile .oct{font-size:.55em;font-weight:700;opacity:.9;margin-left:1px}
+.tile .flag{position:absolute;top:4px;right:6px;font-size:10px;font-weight:700;font-family:var(--font-body);opacity:.9}
+
+/* lessons */
+.lesson{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow)}
+.lesson summary{list-style:none;cursor:pointer;padding:14px 16px;display:flex;align-items:center;gap:12px;font-family:var(--font-display);font-weight:700;font-size:17px}
+.lesson summary::-webkit-details-marker{display:none}
+.lesson summary .num{width:30px;height:30px;border-radius:9px;background:var(--surface-2);display:grid;place-items:center;font-size:14px;color:var(--muted);flex:none}
+.lesson[open] summary .num{background:var(--accent);color:var(--accent-ink)}
+.lesson summary .arrow{margin-left:auto;transition:transform .2s;color:var(--muted);flex:none}
+.lesson[open] summary .arrow{transform:rotate(180deg)}
+.lesson .body{padding:0 16px 16px;border-top:1px solid var(--line)}
+.lesson .body>*:first-child{margin-top:14px}
+.steps{margin:0;padding-left:22px;display:grid;gap:8px}
+.steps li::marker{font-weight:700;color:var(--muted)}
+ul.plain{margin:0;padding-left:20px;display:grid;gap:6px}
+.callout{border-left:4px solid var(--accent);background:var(--accent-soft);padding:10px 12px;border-radius:8px;margin:12px 0}
+.callout.good{border-color:var(--good);background:var(--good-soft)}
+.callout.warn{border-color:var(--warn);background:var(--warn-soft)}
+.video-list{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.video-list a{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;text-decoration:none}
+.video-list svg{width:18px;height:18px;flex:none;color:var(--bad)}
+.bs-grid{display:grid;grid-template-columns:auto repeat(3,1fr);gap:6px;align-items:stretch;margin:10px 0 8px}
+.bs-grid .lab{font-size:12px;color:var(--muted);display:grid;place-items:center;text-align:center;padding:2px}
+.bs-cell{border:1px solid var(--line);border-radius:10px;background:var(--surface-2);min-height:54px;font-size:12px;line-height:1.2;padding:6px;cursor:pointer;text-align:center}
+.bs-cell.center{background:var(--good-soft);border-color:var(--good);font-weight:700}
+.bs-cell.on{outline:3px solid var(--accent)}
+.bs-out{min-height:52px}
+.ts-list{display:grid;gap:8px}
+.ts-item{border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.ts-item b{display:block;margin-bottom:4px}
+
+/* fingering svg */
+.fg{width:100%;height:auto;display:block;max-width:190px;margin:0 auto}
+.fg.fg-wide{max-width:none}
+.fg-closed{fill:var(--ink)} .fg-closed-fill{fill:var(--ink)}
+.fg-open{fill:var(--body);stroke:var(--ink);stroke-width:2}
+.fg-key{fill:var(--body);stroke:var(--key);stroke-width:2} .fg-key-on{fill:var(--key);stroke:var(--key);stroke-width:2}
+.fg-oct{fill:var(--body);stroke:var(--ink);stroke-width:2} .fg-oct-on{fill:var(--accent);stroke:var(--accent-ink);stroke-width:2}
+.fg-body{fill:var(--body);stroke:var(--ink);stroke-width:2}
+.fg-mp{fill:var(--key)} .fg-lig{fill:#9AA1A9} .fg-reed{stroke:#D7B86E;stroke-width:3;stroke-linecap:round}
+.fg-branch{fill:none;stroke:var(--ink);stroke-width:7;stroke-linecap:round;opacity:.9}
+.fg-hook{fill:none;stroke:var(--ink);stroke-width:3;stroke-linecap:round}
+.fg-brk{fill:none;stroke-width:2.5} .fg-brk-l{stroke:var(--hand-l)} .fg-brk-r{stroke:var(--hand-r)}
+.fg-tag{font:700 11px var(--font-body);fill:var(--muted)} .fg-tag-muted{font-weight:400} .fg-tag-l{fill:var(--hand-l)} .fg-tag-r{fill:var(--hand-r)}
+.fg-label{font:12px var(--font-body);fill:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:10px 14px;font-size:12px;color:var(--muted);margin-top:6px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:12px;height:12px;border-radius:50%;display:inline-block;border:2px solid var(--ink)}
+.legend i.c{background:var(--ink)} .legend i.h{background:linear-gradient(90deg,var(--ink) 50%,transparent 50%)} .legend i.k{border-radius:3px;background:var(--key);border-color:var(--key)} .legend i.o8{border-radius:3px;background:var(--accent);border-color:var(--accent-ink)}
+
+/* staff + piano */
+.staff{width:100%;max-width:260px;height:auto;display:block}
+.st-line{stroke:var(--ink);stroke-width:1.2;opacity:.8}
+.st-clef{font:800 30px var(--font-display);fill:var(--muted)}
+.st-head{fill:var(--ink)} .st-stem{stroke:var(--ink);stroke-width:1.6}
+.st-acc{font:700 16px var(--font-body);fill:var(--ink)}
+.st-name{font:700 13px var(--font-body);fill:var(--muted)}
+.piano{width:100%;height:auto;display:block;max-width:420px}
+.pk-white{fill:var(--body);stroke:var(--ink);stroke-width:1;cursor:pointer}
+.pk-black{fill:var(--key);stroke:var(--key);cursor:pointer}
+.pk-sel{stroke-width:2}
+.pk-black.pk-sel{fill:var(--accent);stroke:var(--accent-ink)}
+.pk-name{font:700 9px var(--font-body);fill:var(--muted);pointer-events:none}
+.pk-name-sel{fill:#fff}
+.pk-cap{font:10px var(--font-body);fill:var(--muted)}
+
+/* notes */
+.note-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:8px}
+.note-grid .tile{aspect-ratio:1;font-size:24px;cursor:pointer;border:3px solid transparent;width:100%}
+.note-grid .tile.sel{border-color:var(--ink);box-shadow:0 0 0 2px var(--surface)}
+.note-detail{display:grid;grid-template-columns:minmax(140px,190px) 1fr;gap:14px;align-items:start}
+.note-detail>*{min-width:0}
+.big-note{display:flex;align-items:baseline;gap:6px;font-family:var(--font-display);font-weight:800;font-size:56px;line-height:1}
+.big-note .oct{font-size:24px;color:var(--muted)}
+.finger-text{font-size:14px;color:var(--muted)}
+
+/* songs */
+.song-list{display:grid;gap:8px}
+.song-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);cursor:pointer;text-align:left;width:100%}
+.song-item .t{font-weight:700;font-family:var(--font-display);font-size:16px}
+.song-item .m{font-size:13px;color:var(--muted)}
+.song-item .go{margin-left:auto;color:var(--muted);flex:none}
+.strip{display:flex;gap:5px;overflow-x:auto;padding:10px 4px 12px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
+.strip .tile{height:60px;font-size:22px;flex:none;scroll-snap-align:center;border:3px solid transparent;transition:transform .12s}
+.strip .tile.cur{border-color:var(--ink);transform:scale(1.08);z-index:1}
+.strip .tile.done{opacity:.5}
+.strip .tile.rest{background:var(--surface-2)!important;color:var(--muted)!important;font-size:14px;font-weight:700}
+.strip .bar{width:2px;background:var(--line);flex:none;margin:0 3px;border-radius:2px}
+.player-fg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.player-fg>*{min-width:0}
+.player-fg .fg-box{border:1px solid var(--line);border-radius:12px;padding:8px}
+.player-fg .fg-box .cap{font-size:12px;color:var(--muted);text-align:center;margin-bottom:4px}
+.player-fg .fg-box.next{opacity:.75}
+.countin{font-family:var(--font-display);font-weight:800;font-size:40px;min-width:48px;text-align:center;color:var(--accent-ink);background:var(--accent);border-radius:12px;padding:2px 10px}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.tempo{display:flex;align-items:center;gap:10px}
+.tempo b{font-family:var(--font-display);font-size:20px;min-width:88px;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.toggle{display:inline-flex;align-items:center;gap:8px;font-size:14px;cursor:pointer}
+.toggle input{width:18px;height:18px;accent-color:var(--accent)}
+.beats{display:flex;gap:8px;justify-content:center;margin:10px 0}
+.beats i{width:18px;height:18px;border-radius:50%;background:var(--surface-2);border:2px solid var(--line);display:block}
+.beats i.on{background:var(--accent);border-color:var(--accent-ink)}
+.beats i.acc.on{background:var(--ink);border-color:var(--ink)}
+
+/* tuner */
+.gauge{width:100%;max-width:340px;margin:0 auto;display:block}
+.needle{transform-origin:150px 150px;transition:transform .08s linear}
+.readout{text-align:center}
+.readout .n{font-family:var(--font-display);font-weight:800;font-size:64px;line-height:1}
+.readout .n small{font-size:26px;color:var(--muted);font-weight:700}
+.readout .c{font-family:var(--font-display);font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}
+.state{display:inline-block;padding:4px 12px;border-radius:999px;font-weight:700;font-size:14px;background:var(--surface-2)}
+.state.good{background:var(--good-soft);color:var(--good)} .state.warn{background:var(--warn-soft);color:var(--warn)} .state.bad{background:var(--bad-soft);color:var(--bad)}
+.target{text-align:center;padding:12px;border:2px dashed var(--line);border-radius:12px}
+.target.hit{border-color:var(--good);background:var(--good-soft);animation:pop .4s ease}
+.hold{height:8px;background:var(--surface-2);border-radius:4px;overflow:hidden;margin-top:8px} .hold i{display:block;height:100%;width:0;background:var(--good);transition:width .1s linear}
+.drone-pad{display:grid;grid-template-columns:repeat(8,1fr);gap:6px}
+.drone-pad .tile{height:52px;font-size:18px;cursor:pointer;border:3px solid transparent;width:100%}
+.drone-pad .tile.on{border-color:var(--ink);animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.pitch-canvas{width:100%;height:230px;display:block;border:1px solid var(--line);border-radius:12px;background:var(--surface-2)}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.stat{border:1px solid var(--line);border-radius:10px;padding:8px 10px;min-width:0}
+.stat b{display:block;font-family:var(--font-display);font-size:20px;font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--muted)}
+.file-btn{position:relative;overflow:hidden}
+.file-btn input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+
+/* plan */
+.progress-head{display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:center}
+.ring{width:96px;height:96px}
+.ring .bg{fill:none;stroke:var(--surface-2);stroke-width:9}
+.ring .fgc{fill:none;stroke:var(--accent);stroke-width:9;stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%;transition:stroke-dashoffset .4s ease}
+.ring text{font:800 20px var(--font-display);fill:var(--ink)}
+.ring .sub{font:12px var(--font-body);fill:var(--muted)}
+.stats-mini{display:flex;gap:14px;flex-wrap:wrap}
+.stats-mini div b{display:block;font-family:var(--font-display);font-size:22px;line-height:1.1}
+.stats-mini div span{font-size:12px;color:var(--muted)}
+.heat{display:grid;grid-template-columns:auto 1fr;gap:6px;margin-top:14px;align-items:start}
+.heat .wd{display:grid;grid-template-rows:repeat(7,14px);gap:3px;font-size:9px;color:var(--muted);line-height:14px}
+.heat .cells{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,14px);grid-auto-columns:14px;gap:3px;overflow-x:auto;justify-content:end}
+.heat i{display:block;width:14px;height:14px;border-radius:3px;background:var(--surface-2)}
+.heat i.l1{background:#FFE9A3}.heat i.l2{background:#F2B900}.heat i.l3{background:#B98600}
+:root[data-theme="dark"] .heat i.l1{background:#5A4A12}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .heat i.l1{background:#5A4A12}}
+.heat i.today{outline:2px solid var(--ink);outline-offset:-2px}
+.heat-cap{font-size:12px;color:var(--muted);margin-top:6px}
+.day-steps{display:grid;gap:8px;margin:12px 0}
+.step{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.step.done{background:var(--good-soft);border-color:transparent}
+.step input{width:22px;height:22px;accent-color:var(--good);margin:0}
+.step label{cursor:pointer}
+.step .k{font-size:12px;color:var(--muted)} .step .k b{color:var(--ink)}
+.step .timer{display:flex;align-items:center;gap:6px}
+.step .timer b{font-family:var(--font-display);font-variant-numeric:tabular-nums;min-width:44px;text-align:right}
+.tbar{height:4px;background:var(--surface-2);border-radius:2px;overflow:hidden;grid-column:1/-1}
+.tbar i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s linear}
+.weeks{display:grid;gap:12px}
+.week h3{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.week h3 span{font:13px var(--font-body);color:var(--muted)}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:8px}
+.day-chip{aspect-ratio:1;border-radius:10px;border:2px solid var(--line);background:var(--surface);display:grid;place-items:center;font-family:var(--font-display);font-weight:700;font-size:15px;cursor:pointer;padding:0}
+.day-chip.done{background:var(--good);border-color:var(--good);color:#fff}
+.day-chip.today{border-color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent)}
+.day-chip.sel{outline:3px solid var(--ink);outline-offset:1px}
+textarea{width:100%;min-height:64px;border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--surface);color:var(--ink);resize:vertical}
+input[type=text],input[type=number],input[type=password],select{border:1px solid var(--line);border-radius:10px;padding:9px 10px;background:var(--surface);color:var(--ink);min-height:44px}
+.log-list{display:grid;gap:8px;margin-top:10px}
+.log-day{border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.log-day .h{display:flex;justify-content:space-between;font-weight:700}
+.log-day .h span{color:var(--muted);font-weight:400;font-size:13px}
+.log-day ul{margin:4px 0 0;padding-left:18px;font-size:14px;color:var(--muted)}
+.swatches{display:flex;gap:8px;flex-wrap:wrap}
+.swatch{width:34px;height:34px;border-radius:50%;border:3px solid transparent;cursor:pointer;padding:0}
+.swatch.on{border-color:var(--ink)}
+.plist{display:grid;gap:8px}
+.pitem{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--surface);cursor:pointer;width:100%;text-align:left}
+.pitem.on{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.pitem .m{font-size:13px;color:var(--muted)}
+.pin{letter-spacing:.4em;text-align:center;font-family:var(--font-display);font-size:24px;width:150px}
+
+/* tabs, sheet, toast */
+.tabs{position:fixed;left:0;right:0;bottom:0;height:calc(var(--nav-h) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:var(--surface);border-top:1px solid var(--line);display:flex;justify-content:space-around;z-index:20}
+.tabs button{flex:1;border:0;background:none;display:grid;place-items:center;gap:2px;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;padding:8px 0 6px;position:relative}
+.tabs button svg{width:24px;height:24px}
+.tabs button.on{color:var(--ink)}
+.tabs button.on::before{content:"";position:absolute;top:0;left:22%;right:22%;height:3px;background:var(--accent);border-radius:0 0 3px 3px}
+.sheet{position:fixed;inset:0;z-index:40}
+.sheet[hidden]{display:none}
+.sheet-back{position:absolute;inset:0;background:rgba(10,14,20,.45)}
+.sheet-panel{position:absolute;left:0;right:0;bottom:0;max-height:88%;overflow:auto;background:var(--surface);border-radius:18px 18px 0 0;padding:14px 16px calc(20px + env(safe-area-inset-bottom));box-shadow:0 -10px 40px rgba(0,0,0,.25);max-width:760px;margin:0 auto}
+.sheet-panel::before{content:"";display:block;width:40px;height:4px;border-radius:2px;background:var(--line);margin:0 auto 12px}
+#toast{position:fixed;left:50%;bottom:calc(var(--nav-h) + 16px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--surface);padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:all .25s;z-index:50;max-width:90vw;text-align:center}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.celebrate{animation:pop .5s ease}
+@keyframes pop{0%{transform:scale(.96)}60%{transform:scale(1.03)}100%{transform:scale(1)}}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <div class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 3v14"/><circle cx="12" cy="7" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="17" r="1.6" fill="currentColor"/><path d="M8 21h8"/></svg></div>
+    <div><h1>Venova Studio</h1><small>Yamaha YVS-100 · 30-day course</small></div>
+  </div>
+  <button class="avatar-btn" id="playerBtn" aria-label="Switch player"><span class="avatar" id="playerAvatar">?</span><span class="n" id="playerName">Player</span></button>
+</header>
+
+<main>
+  <!-- ================= START ================= -->
+  <section id="view-start" class="view">
+    <div class="stack">
+      <div class="card hero" id="todayCard"></div>
+      <div class="card" id="installCard" hidden>
+        <h2>Put it on your Home Screen</h2>
+        <p>It then opens full-screen like an app, keeps your progress safely, and works offline. In Safari tap the <b>Share</b> button (the square with an arrow), scroll, and choose <b>Add to Home Screen</b>.</p>
+        <button class="btn sm quiet" id="installDismiss">Got it</button>
+      </div>
+
+      <div class="card">
+        <h2>How this works</h2>
+        <p>Five tabs, one habit. <b>Start</b> holds the lessons (read them in week 1). <b>Notes</b> is the interactive fingering chart with sound. <b>Songs</b> plays along with you and shows the fingerings as they go by. <b>Tuner</b> listens through the microphone, gives you reference tones and checks your recordings. <b>Plan</b> is your 30-day course with a timer for every step and a practice log.</p>
+        <p class="muted small">Everything here follows Yamaha's own "Let's Play Venova!" guidebook, with a saxophone teacher's habits added on top. Where a fingering is marked <span class="badge approx">approx.</span> it is a semitone or a top note: a starting point to confirm against the printed chart in your box and the tuner.</p>
+      </div>
+
+      <details class="lesson" id="lesson-meet">
+        <summary><span class="num">1</span>Meet your Venova<svg class="arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <div class="body">
+          <div id="anatomy"></div>
+          <ul class="plain">
+            <li><b>What it is:</b> a single-reed instrument (like a saxophone or clarinet) with recorder-style holes. The small side loop near the top, the "branch pipe", is what makes it sound like a sax instead of a recorder.</li>
+            <li><b>Key of C, two octaves:</b> from C4 (middle C on a piano) up to C6. It is a non-transposing instrument: a written C sounds as a C, so piano, flute and recorder music works as is.</li>
+            <li><b>Mouthpiece and reed:</b> a soprano-saxophone mouthpiece (equivalent to a Yamaha 4C) with Yamaha's synthetic reed, roughly a strength 2.5. Any soprano sax reed fits.</li>
+            <li><b>Fingering system:</b> shipped in the German system (a small adaptor sits in the right-middle hole). Remove it and the chart changes to Baroque. This app shows German by default; switch in Notes if you removed the adaptor.</li>
+            <li><b>Keys:</b> only a few. The octave lever on the back (left thumb) is used only for notes above high D. Two pairs of black keys sit under the right ring finger and right little finger for the lowest notes and some semitones.</li>
+            <li><b>Care:</b> the ABS body, mouthpiece and synthetic reed can all be washed with water.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="lesson" id="lesson-assemble">
+        <summary><span class="num">2</span>Set up the reed<svg class="arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <div class="body">
+          <ol class="steps">
+            <li><b>Mouthpiece on.</b> Twist it gently side to side as you slide it onto the neck. Push it on about two thirds of the way; this position also sets your tuning later.</li>
+            <li><b>Ligature on.</b> Slide the metal ring over the mouthpiece from the tapered (tip) end, screws facing you, loose.</li>
+            <li><b>Reed in.</b> Flat side against the flat "table" of the mouthpiece, thick end down. Slide the reed up until you can just see a hair-thin edge of the mouthpiece tip above the reed tip. Centre it left to right.</li>
+            <li><b>Ligature in place.</b> Centre it so the Yamaha tuning-fork logo sits in its open window (about a centimetre below the reed's shaved part), then tighten the two screws only until the reed stops moving. Over-tightening chokes the sound.</li>
+            <li><b>Cap on</b> whenever you put it down. The reed tip is the most fragile part you own.</li>
+          </ol>
+          <div class="callout"><b>Teacher's notes.</b> The synthetic reed needs no soaking; a cane reed does (a minute in the mouth or in water). If the first sounds are a struggle after a week, try a cane soprano-sax reed of strength 2 or 2.5: slightly softer reeds speak more easily. Later, Yamaha suggests moving to a slightly stiffer reed once your air is strong, because stiffer reeds help the high notes.</div>
+          <p class="small muted">Reed check: never touch the tip, wipe it dry after playing, and store it flat. A chipped or warped reed squeaks no matter what you do.</p>
+        </div>
+      </details>
+
+      <details class="lesson" id="lesson-hold">
+        <summary><span class="num">3</span>Hold it like a player<svg class="arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <div class="body">
+          <ul class="plain">
+            <li><b>Posture:</b> sit or stand tall, shoulders loose, chin slightly in. The instrument angles down and away from you, roughly 30–45 degrees, so the reed meets the lower lip squarely.</li>
+            <li><b>Left hand on top:</b> thumb covers the back hole; index, middle and ring fingers cover the top three holes. The thumb also works the octave lever later, by rolling up onto it without leaving the hole.</li>
+            <li><b>Right hand below:</b> thumb under the thumb hook (it carries the weight), index, middle and ring fingers on the lower three holes, little finger floating just above its pair of black keys.</li>
+            <li><b>Pads, not tips.</b> Cover each hole with the soft ball of the finger, flat and relaxed. A hole that is 95% covered is 0% covered: it squeaks or jumps up.</li>
+            <li><b>Keep fingers close.</b> Lifted fingers hover about one finger-width above their holes. Big movements are slow movements.</li>
+          </ul>
+          <div class="grid-2" style="margin-top:12px">
+            <div><div id="holdG"></div></div>
+            <div>
+              <p><b>Yamaha's first note is G:</b> thumb plus three left-hand fingers, right hand doing nothing but holding the hook. Low notes need more skill, so everything in week 1 lives in the left hand.</p>
+              <div class="legend"><span><i class="c"></i>covered</span><span><i></i>open</span><span><i class="h"></i>half</span><span><i class="k"></i>key pressed</span><span><i class="o8"></i>octave lever</span></div>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="lesson" id="lesson-sound">
+        <summary><span class="num">4</span>First sound and embouchure<svg class="arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <div class="body">
+          <ol class="steps">
+            <li><b>Top teeth on the mouthpiece,</b> about 1 cm from the tip. They rest there firmly; the mouthpiece should feel anchored.</li>
+            <li><b>Lower lip over the lower teeth,</b> a thin cushion, not rolled in deep. The reed sits on that cushion.</li>
+            <li><b>Close the corners</b> of the mouth around the mouthpiece so no air escapes. Inside, shape the mouth as if saying "OH". Chin flat and pointed down.</li>
+            <li><b>Breathe deep, blow firmly.</b> The Venova wants more air than a recorder. Start with no holes covered: any sound is a success.</li>
+            <li><b>Then G.</b> Four counts, steady. Rest. Six times. Do not bite: pressure comes from the top teeth and firm corners, never from the jaw.</li>
+          </ol>
+          <h3 style="margin-top:14px">The balanced-sound grid</h3>
+          <p class="small muted">Yamaha's chart, made tappable. Rows are how much air you give; columns are how much mouthpiece is in your mouth. Tap a cell to read what you will hear and how to get back to the centre.</p>
+          <div class="bs-grid" id="bsGrid"></div>
+          <div class="callout bs-out" id="bsOut">Tap any cell. The centre is home: a well-balanced tone.</div>
+        </div>
+      </details>
+
+      <details class="lesson" id="lesson-breath">
+        <summary><span class="num">5</span>Air and tongue<svg class="arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <div class="body">
+          <ul class="plain">
+            <li><b>Breathe low.</b> Put a hand on your stomach: breathing in should push it out, not lift the shoulders. Breathe in through the corners of the mouth without moving the embouchure.</li>
+            <li><b>Blow steady, blow warm.</b> Imagine fogging a window: a warm, steady, generous stream. Low notes want slower, bigger air; high notes want faster, more focused air.</li>
+            <li><b>Tonguing.</b> Yamaha's description: touch the tip of the reed with the tip of the tongue, then release. Say "too" (or "doo" for softer starts). The air is already pressing; the tongue just lets it go.</li>
+            <li><b>Start with the tongue, end with the air.</b> Never close the throat to stop a note. Stop the air and the note stops cleanly.</li>
+            <li><b>Slur</b> means no tongue between notes: keep blowing while the fingers change. <b>Staccato</b> ("tut") means short and separated. You will practise both in week 3.</li>
+          </ul>
+          <div class="callout good">Daily long tones are the secret of every good wind player: one note, 8 counts, perfectly level in pitch and volume. Two minutes a day changes everything.</div>
+        </div>
+      </details>
+
+      <details class="lesson" id="lesson-basics">
+        <summary><span class="num">6</span>Music basics in five minutes<svg class="arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <div class="body">
+          <p><b>Seven names, repeating.</b> Notes are named C D E F G A B, then C again one <b>octave</b> higher: the same note, doubled in frequency, sounding "the same but higher". The number after a letter (C4, C5) says which octave. Tap a key below to hear it and see how the Venova fingers it.</p>
+          <div id="basicsPiano"></div>
+          <div class="grid-2" style="margin-top:12px;align-items:center">
+            <div id="basicsStaff"></div>
+            <div><p><b>The staff.</b> Five lines; higher on the page is higher in pitch. The lines of the treble staff are E G B D F ("Every Good Boy Deserves Fruit") and the spaces spell F A C E. This app teaches with coloured letter tiles so you can play on day one, and shows the staff beside each note so you absorb reading as you go.</p></div>
+          </div>
+          <ul class="plain" style="margin-top:10px">
+            <li><b>Sharps and flats</b> are the notes between: C♯ (also called D♭) sits between C and D. On the Venova they are the hardest notes, which is why the course leaves them for week 4.</li>
+            <li><b>Other instruments:</b> a piano, flute or recorder plays the same written notes as your Venova. A saxophone or clarinet is a transposing instrument: its written C sounds as a different note, so to play along with a sax player you would each read different music. Your Venova reads the piano's part.</li>
+            <li><b>Tuning:</b> musicians agree that the A above middle C vibrates 440 times a second (A4 = 440 Hz). The Tuner tab lets you adjust that if you play with a group that tunes differently.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="lesson" id="lesson-rhythm">
+        <summary><span class="num">7</span>Rhythm: beats and note lengths<svg class="arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <div class="body">
+          <p>The <b>beat</b> is the steady pulse you tap your foot to. <b>Tempo</b> is its speed in beats per minute (BPM); 60 BPM is one beat per second. Most of the songs here are in <b>4/4</b>: count "1 2 3 4" and repeat. Amazing Grace and Happy Birthday are in <b>3/4</b>: "1 2 3".</p>
+          <div id="rhythmBars"></div>
+          <p class="small muted" style="margin-top:8px">In the Songs tab, tile width shows length: a whole-note tile is four times as wide as a quarter-note tile. Eighth notes are counted "1 &amp; 2 &amp;".</p>
+          <div class="card" style="margin-top:12px;box-shadow:none">
+            <div class="row between"><h3>Metronome</h3><span class="muted small">tap along with your hand first</span></div>
+            <div class="tempo" style="margin-top:8px"><input type="range" id="metroBpm" min="40" max="160" value="72" aria-label="Metronome tempo"><b><span id="metroBpmVal">72</span> BPM</b></div>
+            <div class="row" style="margin-top:6px"><label class="toggle"><input type="radio" name="metroBeats" value="4" checked> 4/4</label><label class="toggle"><input type="radio" name="metroBeats" value="3"> 3/4</label><label class="toggle"><input type="radio" name="metroBeats" value="2"> 2/4</label></div>
+            <div class="beats" id="metroDots"></div>
+            <button class="btn" id="metroBtn">Start metronome</button>
+          </div>
+        </div>
+      </details>
+
+      <details class="lesson" id="lesson-trouble">
+        <summary><span class="num">8</span>Fix my sound<svg class="arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <div class="body">
+          <p class="small muted">Yamaha's troubleshooting table plus the fixes a teacher reaches for first. Tap a symptom.</p>
+          <div class="row" id="tsChips"></div>
+          <div class="ts-list" id="tsOut" style="margin-top:10px"></div>
+        </div>
+      </details>
+
+      <details class="lesson" id="lesson-care">
+        <summary><span class="num">9</span>Care and tuning the instrument<svg class="arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <div class="body">
+          <ul class="plain">
+            <li><b>After every session:</b> pull the weighted swab through the body, wipe the mouthpiece and reed dry, cap on. Water inside gurgles and clogs the tiny octave vent (if a high note refuses, blow the moisture out of the branch pipe while pressing the lever).</li>
+            <li><b>Weekly:</b> the body and mouthpiece can be washed in lukewarm water with a drop of mild soap. Never hot water, never a dishwasher.</li>
+            <li><b>Tuning:</b> warm the instrument up for a few minutes first (cold plastic plays flat). If everything is flat, push the mouthpiece further onto the neck; if everything is sharp, pull it out a little. Then fix single notes with your embouchure. Stiffer reeds tend to play sharp.</li>
+            <li><b>Reed life:</b> the synthetic reed lasts months. Replace it when it stops responding or the tip is damaged. Yamaha's replacement is the same reed that came in the box.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="lesson" id="lesson-practice">
+        <summary><span class="num">10</span>How to practise (and Yamaha's videos)<svg class="arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <div class="body">
+          <ul class="plain">
+            <li><b>Little and often.</b> 15–20 minutes a day beats two hours on Sunday. Your lip muscles are new; stop when they get wobbly.</li>
+            <li><b>Always the same shape:</b> warm-up long tones, one new thing, one song, one minute of reflection. The Plan tab is built exactly this way, with a timer per step.</li>
+            <li><b>Slow is fast.</b> Set the play-along slower than feels necessary and loop it. Speed arrives on its own.</li>
+            <li><b>Record yourself once a week</b> (Tuner → Check a recording). Your ears improve faster than your fingers, and the recordings prove the progress on bad days.</li>
+            <li><b>Use the drone and the live tuner.</b> Playing a note against a reference tone teaches intonation better than any needle; the needle tells you which way to move.</li>
+          </ul>
+          <h3 style="margin:14px 0 8px">Yamaha's official lesson videos</h3>
+          <p class="small muted">The short "Let's Play Venova!" series from Yamaha's own channel follows the same chapters as these lessons. They open in YouTube.</p>
+          <ul class="video-list" id="videoList"></ul>
+          <p class="small muted" style="margin-top:10px">Yamaha's downloads page has the Owner's Manual, the "Let's Play Venova!" guidebook and the official fingering chart as PDFs: <a href="https://usa.yamaha.com/products/musical_instruments/winds/casual_wind_instruments/venova/yvs-100/downloads.html" target="_blank" rel="noopener">yamaha.com → YVS-100 downloads</a>.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ================= NOTES ================= -->
+  <section id="view-notes" class="view">
+    <div class="stack">
+      <div class="card">
+        <div class="row between">
+          <h2>Fingering chart</h2>
+          <div class="row">
+            <label class="toggle"><input type="checkbox" id="showSharps"> black notes</label>
+            <select id="systemSel" aria-label="Fingering system"><option value="german">German (as shipped)</option><option value="baroque">Baroque (adaptor removed)</option></select>
+          </div>
+        </div>
+        <p class="small muted" style="margin:6px 0 10px">Tap a note to see and hear it. Colours follow the note name everywhere in the app; the small number is the week you meet it.</p>
+        <div class="note-grid" id="noteGrid"></div>
+      </div>
+      <div class="card" id="noteDetail"></div>
+    </div>
+  </section>
+
+  <!-- ================= SONGS ================= -->
+  <section id="view-songs" class="view">
+    <div class="stack">
+      <div class="card" id="playerCard" hidden></div>
+      <div class="card">
+        <div class="row between"><h2>Songs and exercises</h2></div>
+        <div class="row" id="songFilters" style="margin:8px 0 12px"></div>
+        <div class="song-list" id="songList"></div>
+      </div>
+      <div class="card">
+        <h2>Echo game</h2>
+        <p class="small muted">Train your ear: the app plays three notes, you play them back, then reveal the answer. Choose the notes you already know.</p>
+        <div class="row" id="echoLevels"></div>
+        <div class="row" style="margin-top:10px"><button class="btn" id="echoPlay">Play a pattern</button><button class="btn ghost" id="echoReveal" disabled>Reveal</button></div>
+        <div id="echoOut" style="margin-top:10px"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TUNER ================= -->
+  <section id="view-tuner" class="view">
+    <div class="stack">
+      <div class="card">
+        <div class="row between"><h2>Live tuner</h2><span class="small muted">microphone</span></div>
+        <div class="row" style="margin:6px 0 10px">
+          <button class="btn" id="ltStart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>Start listening</button>
+          <div class="row" id="ltModes"><button class="chip on" data-m="tuner">Tuner</button><button class="chip" data-m="trainer">Note trainer</button><button class="chip" data-m="song">Note by note</button></div>
+        </div>
+        <div id="ltTunerPane">
+          <svg class="gauge" viewBox="0 0 300 170" aria-hidden="true">
+            <path d="M30 150 A120 120 0 0 1 270 150" fill="none" stroke="var(--surface-2)" stroke-width="18" stroke-linecap="round"/>
+            <path d="M135 32 A120 120 0 0 1 165 32" fill="none" stroke="var(--good)" stroke-width="18"/>
+            <path d="M98 44 A120 120 0 0 1 135 32" fill="none" stroke="var(--warn)" stroke-width="18" opacity=".7"/>
+            <path d="M165 32 A120 120 0 0 1 202 44" fill="none" stroke="var(--warn)" stroke-width="18" opacity=".7"/>
+            <text x="30" y="168" font-size="12" fill="var(--muted)" font-family="var(--font-body)">−50 ¢ flat</text>
+            <text x="270" y="168" font-size="12" fill="var(--muted)" font-family="var(--font-body)" text-anchor="end">+50 ¢ sharp</text>
+            <line id="ltNeedle" class="needle" x1="150" y1="150" x2="150" y2="42" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="150" cy="150" r="7" fill="var(--ink)"/>
+          </svg>
+          <div class="readout">
+            <div class="n" id="ltNote">–</div>
+            <div class="c" id="ltCents">tap Start listening</div>
+            <div style="margin-top:6px"><span class="state" id="ltState">microphone off</span></div>
+            <div class="small muted" id="ltHz"></div>
+          </div>
+          <div class="grid-2" style="margin-top:12px;align-items:center">
+            <div id="ltFg"></div>
+            <div id="ltTxt" class="small muted">The diagram shows the Venova fingering for the note the microphone hears, so you can check that your fingers and the pitch agree.</div>
+          </div>
+        </div>
+        <div id="ltTrainerPane" class="hidden">
+          <div class="row between"><h3>Note trainer</h3><span class="small muted" id="ltScore">0 hits</span></div>
+          <p class="small muted">Pick a set, play the target, hold it in tune for a moment, and the next one appears.</p>
+          <div class="row" id="ltLevels"></div>
+          <div class="grid-2" style="margin-top:12px">
+            <div class="target" id="ltTarget"><div class="small muted">target</div><div id="ltTargetTile"></div><div class="hold"><i id="ltHold"></i></div><div class="small muted" id="ltHeard" style="margin-top:6px"></div></div>
+            <div id="ltTargetFg"></div>
+          </div>
+          <div class="row" style="margin-top:10px"><button class="btn ghost sm" id="ltSkip">Skip</button><button class="btn ghost sm" id="ltHear">Hear it</button></div>
+        </div>
+        <div id="ltSongPane" class="hidden">
+          <div class="row between"><h3>Note by note</h3><select id="ltSongSel" aria-label="Song"></select></div>
+          <p class="small muted">No tempo: the song waits for you. Play each note in tune and it moves on; rests pass by themselves.</p>
+          <div class="strip" id="ltStrip"></div>
+          <div class="grid-2"><div id="ltSongFg"></div><div><div class="small muted">now</div><div id="ltSongNow" style="font-family:var(--font-display);font-size:34px;font-weight:800"></div><div class="small muted" style="margin-top:6px">next</div><div id="ltSongNext" style="font-family:var(--font-display);font-size:22px;font-weight:700"></div><div class="hold"><i id="ltSongHold"></i></div><div class="small muted" id="ltSongHeard" style="margin-top:6px"></div><div class="row" style="margin-top:10px"><button class="btn ghost sm" id="ltSongRestart">Restart</button><button class="btn ghost sm" id="ltSongSkip">Skip note</button></div></div></div>
+          <div class="small" id="ltSongDone" style="margin-top:8px"></div>
+        </div>
+        <p class="small muted" id="ltHelp" style="margin-top:10px">Allow the microphone when asked. Hold the phone about 30 cm from the bell, in a quiet room.</p>
+      </div>
+
+      <div class="card">
+        <h2>Reference tones</h2>
+        <p class="small muted">Tap a note to start a drone, tap again to stop. Play the same note on your Venova and listen for the slow "wah-wah" wobble; it slows down as you get closer and disappears when you are in tune.</p>
+        <div class="drone-pad" id="dronePad"></div>
+        <div class="row between" style="margin-top:12px">
+          <div id="droneFg" class="muted small">No drone playing.</div>
+          <label class="small muted">A4 = <input type="number" id="a4Input" min="430" max="450" step="1" value="440" style="width:80px"> Hz</label>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Tune the instrument, then the note</h2>
+        <ol class="steps">
+          <li>Warm up for 3–5 minutes. A cold Venova plays flat and then creeps up.</li>
+          <li>Play a long A4 or G4 with the live tuner. Aim for the green zone; small wobbles are normal.</li>
+          <li><b>Everything flat?</b> Push the mouthpiece further onto the neck, a millimetre at a time. <b>Everything sharp?</b> Pull it out a little, and check you are not biting.</li>
+          <li>Fix single notes with the embouchure: a slightly firmer, faster air stream raises the pitch a touch; a relaxed jaw and more "OH" inside the mouth lowers it.</li>
+          <li>The Venova's semitones (F♯, G♯, B♭) run sharp by design. Yamaha's advice: adjust them with fingering, airflow and embouchure.</li>
+        </ol>
+      </div>
+
+      <div class="card">
+        <h2>Check a recording</h2>
+        <p class="small muted">Record a long tone or a song with Voice Memos, save it to Files, then open it here. You get the pitch drawn over time, the note you held, how far from in tune it was, and how steady.</p>
+        <div class="row">
+          <label class="btn file-btn">Open a recording<input type="file" id="recFile" accept="audio/*,video/*"></label>
+          <span class="small muted" id="recName"></span>
+        </div>
+        <canvas class="pitch-canvas" id="pitchCanvas" style="margin-top:12px" height="230"></canvas>
+        <div id="recStats"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PLAN ================= -->
+  <section id="view-plan" class="view">
+    <div class="stack">
+      <div class="card" id="planHead"></div>
+      <div class="card" id="dayCard"></div>
+      <div class="card">
+        <h2>The 30 days</h2>
+        <p class="small muted" style="margin-bottom:8px">Tap any day to open it. Filled = done, yellow ring = up next.</p>
+        <div class="weeks" id="weeks"></div>
+      </div>
+      <div class="card" id="logCard"></div>
+      <div class="card" id="backupCard"></div>
+      <div class="card" id="settingsCard"></div>
+    </div>
+  </section>
+</main>
+
+<nav class="tabs" aria-label="Sections">
+  <button data-view="start"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V5l12 7-12 8z"/><path d="M20 4v16"/></svg>Start</button>
+  <button data-view="notes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="8" y="2" width="8" height="20" rx="4"/><circle cx="12" cy="7" r="1.4" fill="currentColor"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/><circle cx="12" cy="17" r="1.4" fill="currentColor"/></svg>Notes</button>
+  <button data-view="songs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></svg>Songs</button>
+  <button data-view="tuner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 16a8 8 0 0 1 16 0"/><path d="M12 16l4-6"/><circle cx="12" cy="16" r="1.5" fill="currentColor"/><path d="M3 20h18"/></svg>Tuner</button>
+  <button data-view="plan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="m9 15 2 2 4-4"/></svg>Plan</button>
+</nav>
+<div id="sheet" class="sheet" hidden><div class="sheet-back" id="sheetBack"></div><div class="sheet-panel" role="dialog" aria-modal="true" id="sheetPanel"></div></div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* Venova Studio — shared core: notes, fingerings, songs, plan, audio, pitch detection, SVG renderers.
+   Built for the Yamaha Venova YVS-100 (key of C, range C4–C6, German fingering system as shipped). */
+'use strict';
+
+/* ---------- Note colors (one hue per letter; letters are always printed on tiles) ---------- */
+const LETTER_COLORS = {
+  light: { C:'#DD4A4A', D:'#EE7F2A', E:'#D6AE00', F:'#4FAE4A', G:'#1A9FB5', A:'#5A62DD', B:'#C94BA6' },
+  dark:  { C:'#F06B6B', D:'#F59A52', E:'#E6C33A', F:'#6FC46A', G:'#3FBBD0', A:'#8A8FF0', B:'#E07AC4' }
+};
+const LETTER_INK_DARK = { C:false, D:true, E:true, F:true, G:true, A:false, B:false }; // true = dark text reads better on this tile (light theme)
+
+const LETTERS = ['C','D','E','F','G','A','B'];
+const SEMITONE_OF = { C:0, D:2, E:4, F:5, G:7, A:9, B:11 };
+
+/* ---------- Notes: id, name, midi, letter, accidental ---------- */
+function makeNote(id){
+  const m = /^([A-G])(s?)(\d)$/.exec(id);
+  const letter = m[1], sharp = m[2] === 's', oct = +m[3];
+  const midi = 12 * (oct + 1) + SEMITONE_OF[letter] + (sharp ? 1 : 0);
+  const nextLetter = LETTERS[(LETTERS.indexOf(letter) + 1) % 7];
+  return {
+    id, letter, sharp, oct, midi,
+    name: sharp ? letter + '♯' : letter,
+    altName: sharp ? nextLetter + '♭' : '',
+    label: (sharp ? letter + '♯/' + nextLetter + '♭' : letter) + oct,
+    upperLetter: sharp ? nextLetter : letter
+  };
+}
+const NOTE_IDS = ['C4','Cs4','D4','Ds4','E4','F4','Fs4','G4','Gs4','A4','As4','B4','C5','Cs5','D5','Ds5','E5','F5','Fs5','G5','Gs5','A5','As5','B5','C6'];
+const NOTES = {};
+NOTE_IDS.forEach(id => { NOTES[id] = makeNote(id); });
+const NATURAL_IDS = NOTE_IDS.filter(id => !NOTES[id].sharp);
+
+function noteFreq(id, a4){ return (a4 || 440) * Math.pow(2, (NOTES[id].midi - 69) / 12); }
+function midiToFreq(m, a4){ return (a4 || 440) * Math.pow(2, (m - 69) / 12); }
+function freqToMidi(f, a4){ return 69 + 12 * Math.log2(f / (a4 || 440)); }
+function midiName(m){ const names = ['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B']; const n = Math.round(m); return names[((n % 12) + 12) % 12] + (Math.floor(n / 12) - 1); }
+function midiToId(m){ const n = Math.round(m); const names = ['C','Cs','D','Ds','E','F','Fs','G','Gs','A','As','B']; return names[((n % 12) + 12) % 12] + (Math.floor(n / 12) - 1); }
+
+/* ---------- Fingerings ----------
+   T: left thumb on the back hole ('c' covered, 'o' off the hole, 'h' half-open "pinch")
+   L: left index/middle/ring holes;  R: right index/middle/ring. R[2] may be 'k1' = press only ONE of that pair of black keys.
+   P: right little-finger pair of black keys: 'both' | 'one' | 'none'
+   oct: octave lever pressed by the left thumb (thumb stays on the hole).
+   sure: true = standard diatonic fingering, reliable. false = semitone / top-register fingering: a starting point, confirm with the printed chart and the tuner. */
+const F = (T, L, R, P, oct) => ({ T, L: L.split(''), R: R.split('').map(ch => ch === 'k' ? 'k1' : ch), P: P || 'none', oct: !!oct });
+const FINGERINGS = {
+  C4:  { main: F('c','ccc','ccc','both'), sure: true,  week: 2, tip: 'The lowest note. Press both pinky keys together, keep every pad sealed, and use slow, warm, plentiful air with your top teeth firmly on the mouthpiece.' },
+  Cs4: { main: F('c','ccc','ccc','one'),  sure: false, week: 4, tip: 'Press only one of the two pinky keys. Semitones on the Venova tend to run sharp: relax the jaw and check the tuner.' },
+  D4:  { main: F('c','ccc','ccc'),        sure: true,  week: 2, tip: 'All six finger holes plus the thumb. Pinky floats just above its keys without touching them.' },
+  Ds4: { main: F('c','ccc','cck'),        sure: false, week: 4, tip: 'Ring finger presses only one of its two black keys. Tune it by ear and with the tuner.' },
+  E4:  { main: F('c','ccc','cco'),        sure: true,  week: 2, tip: 'First right-hand note. Right thumb under the hook, index and middle pads flat and relaxed.' },
+  F4:  { main: F('c','ccc','coo'), baroque: F('c','ccc','coc','both'), sure: true, week: 2, tip: 'German system (as shipped, adaptor in the right-middle hole): just the right index finger. If F sounds sharp, add air support and loosen the bite.' },
+  Fs4: { main: F('c','ccc','occ'), alt: F('c','ccc','hco'), sure: false, week: 4, tip: 'The weakest note on the instrument: it speaks sharp and thin. Try half-covering the right index hole, soft jaw, steady air.' },
+  G4:  { main: F('c','ccc','ooo'),        sure: true,  week: 1, tip: 'Your first note, and the one Yamaha starts with: left thumb plus three left-hand fingers. The right thumb only holds the hook.' },
+  Gs4: { main: F('c','cco','ccc'), alt: F('c','cch','ooo'), sure: false, week: 4, tip: 'Hard to make speak; often needs a half-covered left ring finger. Use sparingly at first.' },
+  A4:  { main: F('c','cco','ooo'),        sure: true,  week: 1, tip: 'Lift the left ring finger from G. Keep it hovering close to its hole.' },
+  As4: { main: F('c','coc','coo'), alt: F('c','coc','ccc','one'), sure: false, week: 4, tip: 'Recorder-style forked fingering. If it is too sharp, add the right middle and ring fingers.' },
+  B4:  { main: F('c','coo','ooo'),        sure: true,  week: 1, tip: 'Thumb and left index only. Watch that the other fingers do not drift far away.' },
+  C5:  { main: F('c','oco','ooo'),        sure: true,  week: 1, tip: 'Thumb plus the left middle finger alone. Light, fast air; do not bite.' },
+  Cs5: { main: F('o','cco','ooo'),        sure: false, week: 4, tip: 'Thumb completely off the back hole; left index and middle down.' },
+  D5:  { main: F('o','oco','ooo'),        sure: true,  week: 1, tip: '"High D": thumb off the back hole, left middle finger only. Keep the thumb close so it can return instantly.' },
+  Ds5: { main: F('c','ccc','cck','none',true), sure: false, week: 4, tip: 'Octave lever plus the low D♯ fingering.' },
+  E5:  { main: F('c','ccc','cco','none',true), sure: true, week: 4, tip: 'Above high D the octave lever takes over: keep the thumb on the hole, roll it onto the lever, and finger a normal E. Faster air, not a tighter bite.' },
+  F5:  { main: F('c','ccc','coo','none',true), baroque: F('c','ccc','coc','both',true), sure: true, week: 4, tip: 'Octave lever plus the F fingering. Keep the corners of the mouth firm.' },
+  Fs5: { main: F('c','ccc','oco','none',true), sure: false, week: 4, tip: 'Octave lever plus right middle finger only is a workable start; tune by ear.' },
+  G5:  { main: F('c','ccc','ooo','none',true), sure: true, week: 4, tip: 'Octave lever plus G. The octave jump G4 to G5 is the Happy Birthday leap.' },
+  Gs5: { main: F('c','cco','cco','none',true), sure: false, week: 4, tip: 'Thin and sharp by nature; experiment with a half-covered left ring finger.' },
+  A5:  { main: F('c','cco','ooo','none',true), sure: true, week: 4, tip: 'Octave lever plus A. Support the top register from the belly.' },
+  As5: { main: F('c','cco','occ','none',true), alt: F('c','coc','coo','none',true), sure: false, week: 4, tip: 'Octave lever, A fingering, plus the right middle and ring fingers (a recorder-style B♭).' },
+  B5:  { main: F('c','coo','ooo','none',true), alt: F('c','coo','coo','none',true), sure: true, week: 4, tip: 'Octave lever plus B. If it is reluctant, adding the right index finger helps it speak.' },
+  C6:  { main: F('c','oco','ooo','none',true), sure: true, week: 4, tip: 'Top of the standard range: octave lever plus the C fingering (thumb and left middle finger). Fast, focused air.' }
+};
+function fingeringFor(id, system){
+  const f = FINGERINGS[id];
+  if (system === 'baroque' && f.baroque) return f.baroque;
+  return f.main;
+}
+
+/* Finger-word description for screen readers / text lists */
+function fingeringText(fg){
+  const parts = [];
+  if (fg.oct) parts.push('octave lever');
+  if (fg.T === 'c') parts.push('thumb'); else if (fg.T === 'h') parts.push('thumb half-open'); else parts.push('thumb off');
+  const L = ['L1 index','L2 middle','L3 ring'].filter((_, i) => fg.L[i] === 'c');
+  const Lh = ['L1 index','L2 middle','L3 ring'].filter((_, i) => fg.L[i] === 'h').map(s => s + ' (half)');
+  const R = ['R1 index','R2 middle','R3 ring'].filter((_, i) => fg.R[i] === 'c');
+  const Rh = ['R1 index','R2 middle','R3 ring'].filter((_, i) => fg.R[i] === 'h').map(s => s + ' (half)');
+  if (fg.R[2] === 'k1') R.push('R3 ring: one key only');
+  parts.push(...L, ...Lh, ...R, ...Rh);
+  if (fg.P === 'both') parts.push('pinky: both keys'); else if (fg.P === 'one') parts.push('pinky: one key');
+  return parts.join(' · ');
+}
+
+/* ---------- Fingering diagram (SVG) ---------- */
+function fingeringSVG(fg, opts){
+  opts = opts || {};
+  const labels = !!opts.labels;        // anatomy mode with part names
+  const compact = !!opts.compact;      // small inline version
+  const W = labels ? 430 : 170, H = 420;
+  const cx = labels ? 150 : 80;        // tube centre x
+  const bx = cx - 50;                  // back-column x (thumb)
+  const hole = (x, y, state, r) => {
+    r = r || 10;
+    if (state === 'h') {
+      return `<circle cx="${x}" cy="${y}" r="${r}" class="fg-open"/><path d="M${x} ${y - r} A${r} ${r} 0 0 0 ${x} ${y + r} Z" class="fg-closed-fill"/>`;
+    }
+    return `<circle cx="${x}" cy="${y}" r="${r}" class="${state === 'c' ? 'fg-closed' : 'fg-open'}"/>`;
+  };
+  const keyPair = (x, y, state) => { // state: 'both' | 'one' | 'none'
+    const a = state === 'both' || state === 'one' ? 'fg-key-on' : 'fg-key';
+    const b = state === 'both' ? 'fg-key-on' : 'fg-key';
+    return `<rect x="${x - 15}" y="${y - 9}" width="13" height="18" rx="4" class="${a}"/><rect x="${x + 2}" y="${y - 9}" width="13" height="18" rx="4" class="${b}"/>`;
+  };
+  const yL = [104, 132, 160], yR = [212, 240, 268], yP = 300;
+  let s = `<svg viewBox="0 0 ${W} ${H}" class="fg${compact ? ' fg-compact' : ''}${labels ? ' fg-wide' : ''}" style="aspect-ratio:${W}/${H}" role="img" aria-label="Fingering diagram: ${fingeringText(fg)}" xmlns="http://www.w3.org/2000/svg">`;
+  // mouthpiece + reed + ligature
+  s += `<path d="M${cx - 9} 50 L${cx - 13} 16 Q${cx} 4 ${cx + 13} 16 L${cx + 9} 50 Z" class="fg-mp"/>`;
+  s += `<rect x="${cx - 12}" y="30" width="24" height="7" rx="2" class="fg-lig"/>`;
+  s += `<line x1="${cx + 12}" y1="14" x2="${cx + 9}" y2="48" class="fg-reed"/>`;
+  // branch pipe (the little side loop that gives the Venova its sax-like tone)
+  s += `<path d="M${cx + 18} 62 h14 a7 7 0 0 1 7 7 v52 a7 7 0 0 1 -7 7 h-14" class="fg-branch"/>`;
+  // body + bell
+  s += `<rect x="${cx - 18}" y="48" width="36" height="326" rx="16" class="fg-body"/>`;
+  s += `<path d="M${cx - 18} 360 L${cx - 26} 404 Q${cx} 416 ${cx + 26} 404 L${cx + 18} 360 Z" class="fg-body"/>`;
+  // thumb hook (right thumb, back)
+  s += `<path d="M${cx + 18} 226 h12 v12 h-6" class="fg-hook"/>`;
+  // back column: octave lever + thumb hole
+  s += `<rect x="${bx - 7}" y="${yL[0] - 42}" width="14" height="26" rx="6" class="${fg.oct ? 'fg-oct-on' : 'fg-oct'}"/>`;
+  s += hole(bx, yL[0] + 10, fg.T === 'o' ? 'o' : fg.T === 'h' ? 'h' : 'c', 11);
+  s += `<text x="${bx}" y="${yL[0] - 48}" class="fg-tag" text-anchor="middle">oct</text>`;
+  s += `<text x="${bx}" y="${yL[0] + 36}" class="fg-tag" text-anchor="middle">thumb</text>`;
+  s += `<text x="${bx}" y="${yL[0] - 64}" class="fg-tag fg-tag-muted" text-anchor="middle">back</text>`;
+  // front holes
+  yL.forEach((y, i) => { s += hole(cx, y, fg.L[i]); });
+  yR.forEach((y, i) => {
+    if (i < 2) s += hole(cx, y, fg.R[i]);
+    else s += keyPair(cx, y, fg.R[2] === 'c' ? 'both' : fg.R[2] === 'k1' ? 'one' : 'none');
+  });
+  s += keyPair(cx, yP, fg.P);
+  // hand brackets
+  s += `<path d="M${cx + 30} ${yL[0] - 14} h6 v${yL[2] - yL[0] + 28} h-6" class="fg-brk fg-brk-l"/>`;
+  s += `<path d="M${cx + 30} ${yR[0] - 14} h6 v${yP - yR[0] + 26} h-6" class="fg-brk fg-brk-r"/>`;
+  if (!labels) {
+    s += `<text x="${cx + 42}" y="${yL[1] + 4}" class="fg-tag fg-tag-l">left</text>`;
+    s += `<text x="${cx + 42}" y="${yR[1] + 14}" class="fg-tag fg-tag-r">right</text>`;
+  } else {
+    const lab = (x, y, t, anchor) => `<text x="${x}" y="${y}" class="fg-label" text-anchor="${anchor || 'start'}">${t}</text>`;
+    s += lab(cx + 22, 20, 'mouthpiece (soprano sax, 4C type)');
+    s += lab(cx + 22, 38, 'reed and ligature');
+    s += lab(cx + 46, 92, 'branch pipe: the sax sound');
+    s += lab(cx + 42, yL[0] + 4, 'left index');
+    s += lab(cx + 42, yL[1] + 4, 'left middle');
+    s += lab(cx + 42, yL[2] + 4, 'left ring');
+    s += lab(cx + 42, yR[0] + 4, 'right index');
+    s += lab(cx + 42, yR[1] + 4, 'right middle (German adaptor)');
+    s += lab(cx + 42, yR[2] + 4, 'right ring: pair of black keys');
+    s += lab(cx + 42, yP + 4, 'right pinky: pair of black keys');
+    s += lab(cx + 36, 252, 'thumb hook (right thumb)');
+    s += lab(cx + 30, 398, 'bell');
+    s += lab(bx - 18, yL[0] - 24, 'octave lever', 'end');
+    s += lab(bx - 18, yL[0] + 14, 'thumb hole', 'end');
+  }
+  s += '</svg>';
+  return s;
+}
+
+/* ---------- Staff (treble clef) ---------- */
+function staffSVG(id){
+  const n = NOTES[id];
+  // diatonic steps from E4 (bottom line) using the natural letter name for sharps' lower letter
+  const letterIdx = LETTERS.indexOf(n.letter);
+  const step = (n.oct - 4) * 7 + letterIdx - 2; // E4 -> 0
+  const W = 220, H = 110, lineGap = 10, bottomY = 80;
+  const y = bottomY - step * (lineGap / 2);
+  let s = `<svg viewBox="0 0 ${W} ${H}" class="staff" role="img" aria-label="${n.label} on the treble staff" xmlns="http://www.w3.org/2000/svg">`;
+  for (let i = 0; i < 5; i++) s += `<line x1="38" y1="${bottomY - i * lineGap}" x2="${W - 10}" y2="${bottomY - i * lineGap}" class="st-line"/>`;
+  // the treble clef is a stylised letter G: a plain G stands in for it so it renders on every device
+  s += `<text x="8" y="${bottomY + 2}" class="st-clef">G</text>`;
+  const x = 140;
+  // ledger lines
+  if (step <= -2) for (let st = -2; st >= step; st -= 2) s += `<line x1="${x - 14}" y1="${bottomY - st * (lineGap / 2)}" x2="${x + 14}" y2="${bottomY - st * (lineGap / 2)}" class="st-line"/>`;
+  if (step >= 10) for (let st = 10; st <= step; st += 2) s += `<line x1="${x - 14}" y1="${bottomY - st * (lineGap / 2)}" x2="${x + 14}" y2="${bottomY - st * (lineGap / 2)}" class="st-line"/>`;
+  if (n.sharp) s += `<text x="${x - 26}" y="${y + 5}" class="st-acc">♯</text>`;
+  s += `<ellipse cx="${x}" cy="${y}" rx="7.5" ry="5.2" class="st-head" transform="rotate(-20 ${x} ${y})"/>`;
+  const stemUp = step < 6;
+  s += stemUp ? `<line x1="${x + 6.5}" y1="${y - 1}" x2="${x + 6.5}" y2="${y - 32}" class="st-stem"/>` : `<line x1="${x - 6.5}" y1="${y + 1}" x2="${x - 6.5}" y2="${y + 32}" class="st-stem"/>`;
+  s += `<text x="${W - 12}" y="${bottomY + 22}" class="st-name" text-anchor="end">${n.label}</text>`;
+  s += '</svg>';
+  return s;
+}
+
+/* ---------- Piano keyboard C4–C6 ---------- */
+function pianoSVG(selectedId, theme){
+  const whites = NATURAL_IDS; // C4..C6 (15)
+  const kw = 22, kh = 70, W = whites.length * kw + 2, H = kh + 22;
+  const colors = LETTER_COLORS[theme === 'dark' ? 'dark' : 'light'];
+  let s = `<svg viewBox="0 0 ${W} ${H}" class="piano" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Piano keys from middle C to C6">`;
+  whites.forEach((id, i) => {
+    const n = NOTES[id]; const x = 1 + i * kw; const sel = id === selectedId;
+    s += `<rect data-note="${id}" x="${x}" y="1" width="${kw}" height="${kh}" rx="3" class="pk-white${sel ? ' pk-sel' : ''}" style="${sel ? 'fill:' + colors[n.letter] : ''}"/>`;
+    s += `<text x="${x + kw / 2}" y="${kh - 6}" class="pk-name${sel ? ' pk-name-sel' : ''}" text-anchor="middle" pointer-events="none">${n.letter}${n.letter === 'C' ? n.oct : ''}</text>`;
+  });
+  whites.forEach((id, i) => {
+    const n = NOTES[id];
+    if (['C','D','F','G','A'].includes(n.letter) && !(n.letter === 'C' && n.oct === 6)) {
+      const sid = n.letter + 's' + n.oct; const x = 1 + i * kw + kw * 0.68; const sel = sid === selectedId;
+      s += `<rect data-note="${sid}" x="${x}" y="1" width="${kw * 0.64}" height="${kh * 0.6}" rx="2" class="pk-black${sel ? ' pk-sel' : ''}"/>`;
+    }
+  });
+  s += `<text x="${W / 2}" y="${H - 4}" class="pk-cap" text-anchor="middle">the Venova's two octaves on a piano (C4 = middle C)</text>`;
+  s += '</svg>';
+  return s;
+}
+
+/* ---------- Songs (beats; quarter note = 1). 'r' = rest ---------- */
+const N = (n, d) => [n, d];
+const seq = (str) => str.trim().split(/\s+/).map(tok => { const m = /^([A-Gr]s?\d?)(?::([\d.]+))?$/.exec(tok); return [m[1], m[2] ? +m[2] : 1]; });
+const SONGS = [
+  { id: 'hot-cross-buns', title: 'Hot Cross Buns', origin: 'English nursery rhyme', week: 1, bpm: 66, beats: 4, range: 'G4–B4 (left hand only)',
+    tip: 'Three notes, three fingers. Tongue every note ("too") and keep the air flowing through the long G.',
+    notes: seq('B4:2 A4:2 G4:4  B4:2 A4:2 G4:4  G4:.5 G4:.5 G4:.5 G4:.5 A4:.5 A4:.5 A4:.5 A4:.5  B4:2 A4:2 G4:4') },
+  { id: 'au-clair', title: 'Au clair de la lune (part 1)', origin: 'French folk song', week: 1, bpm: 72, beats: 4, range: 'G4–B4 (left hand only)',
+    tip: 'Repeated notes need a clear tongue stroke each time. Breathe at the end of each line.',
+    notes: seq('G4 G4 G4 A4  B4:2 A4:2  G4 B4 A4 A4  G4:4  G4 G4 G4 A4  B4:2 A4:2  G4 B4 A4 A4  G4:4') },
+  { id: 'mary-g', title: 'Mary Had a Little Lamb', origin: 'American nursery rhyme', week: 1, bpm: 72, beats: 4, range: 'G4–D5 (left hand only)',
+    tip: 'High D means the thumb comes OFF the back hole. Practise the C–D–C thumb lift before you start.',
+    notes: seq('B4 A4 G4 A4  B4 B4 B4:2  A4 A4 A4:2  B4 D5 D5:2  B4 A4 G4 A4  B4 B4 B4 B4  A4 A4 B4 A4  G4:4') },
+  { id: 'hot-cross-buns-f', title: 'Hot Cross Buns in F', origin: 'Same tune, lower', week: 2, bpm: 66, beats: 4, range: 'F4–A4',
+    tip: 'Your first right-hand song: F is the right index finger. Keep the right thumb under the hook.',
+    notes: seq('A4:2 G4:2 F4:4  A4:2 G4:2 F4:4  F4:.5 F4:.5 F4:.5 F4:.5 G4:.5 G4:.5 G4:.5 G4:.5  A4:2 G4:2 F4:4') },
+  { id: 'mary-f', title: 'Mary Had a Little Lamb in F', origin: 'American nursery rhyme', week: 2, bpm: 72, beats: 4, range: 'F4–C5',
+    tip: 'Mixes right-hand F with left-hand C. Watch that the right fingers stay sealed on F.',
+    notes: seq('A4 G4 F4 G4  A4 A4 A4:2  G4 G4 G4:2  A4 C5 C5:2  A4 G4 F4 G4  A4 A4 A4 A4  G4 G4 A4 G4  F4:4') },
+  { id: 'ode-to-joy', title: 'Ode to Joy', origin: 'Beethoven, Symphony No. 9', week: 2, bpm: 76, beats: 4, range: 'C4–G4',
+    tip: 'Low C is the hardest note here: slow warm air, both pinky keys, top teeth firm. The dotted rhythm near the end is "long–short".',
+    notes: seq('E4 E4 F4 G4  G4 F4 E4 D4  C4 C4 D4 E4  E4:1.5 D4:.5 D4:2  E4 E4 F4 G4  G4 F4 E4 D4  C4 C4 D4 E4  D4:1.5 C4:.5 C4:2') },
+  { id: 'twinkle', title: 'Twinkle, Twinkle, Little Star', origin: 'French melody, 1761', week: 2, bpm: 80, beats: 4, range: 'C4–A4',
+    tip: 'The jump C4 to G4 is a big one: finger G while the C is still sounding, then move all fingers together.',
+    notes: seq('C4 C4 G4 G4  A4 A4 G4:2  F4 F4 E4 E4  D4 D4 C4:2  G4 G4 F4 F4  E4 E4 D4:2  G4 G4 F4 F4  E4 E4 D4:2  C4 C4 G4 G4  A4 A4 G4:2  F4 F4 E4 E4  D4 D4 C4:2') },
+  { id: 'lightly-row', title: 'Lightly Row', origin: 'German folk song', week: 2, bpm: 80, beats: 4, range: 'C4–G4',
+    tip: 'A classic first piece for every wind player. Keep the repeated notes even, like a steady heartbeat.',
+    notes: seq('G4 E4 E4:2  F4 D4 D4:2  C4 D4 E4 F4  G4 G4 G4:2  G4 E4 E4:2  F4 D4 D4:2  C4 E4 G4 G4  E4:4  D4 D4 D4 D4  D4 E4 F4:2  E4 E4 E4 E4  E4 F4 G4:2  G4 E4 E4:2  F4 D4 D4:2  C4 E4 G4 G4  C4:4') },
+  { id: 'frere-jacques', title: 'Frère Jacques', origin: 'French round (ending adapted up an octave)', week: 3, bpm: 84, beats: 4, range: 'C4–A4',
+    tip: 'The "sonnez les matines" bar has eighth notes: count "1 & 2 &". Slur them if tonguing gets messy.',
+    notes: seq('C4 D4 E4 C4  C4 D4 E4 C4  E4 F4 G4:2  E4 F4 G4:2  G4:.5 A4:.5 G4:.5 F4:.5 E4 C4  G4:.5 A4:.5 G4:.5 F4:.5 E4 C4  C4 G4 C4:2  C4 G4 C4:2') },
+  { id: 'jingle-bells', title: 'Jingle Bells (chorus)', origin: 'J. Pierpont, 1857', week: 3, bpm: 92, beats: 4, range: 'C4–G4',
+    tip: 'Breathe only at the long notes. The F–F–F bar wants a light tongue and plenty of air.',
+    notes: seq('E4 E4 E4:2  E4 E4 E4:2  E4 G4 C4:1.5 D4:.5  E4:4  F4 F4 F4:1.5 F4:.5  F4 E4 E4 E4:.5 E4:.5  E4 D4 D4 E4  D4:2 G4:2  E4 E4 E4:2  E4 E4 E4:2  E4 G4 C4:1.5 D4:.5  E4:4  F4 F4 F4:1.5 F4:.5  F4 E4 E4 E4:.5 E4:.5  G4 G4 F4 D4  C4:4') },
+  { id: 'amazing-grace', title: 'Amazing Grace', origin: 'Traditional (New Britain), in F', week: 3, bpm: 66, beats: 3, pickup: 1, range: 'C4–C5',
+    tip: 'In 3: count "1 2 3". Take a full breath on the long C5 ("me"), and shape each 4-bar phrase soft → louder → soft.',
+    notes: seq('C4  F4:2 A4:.5 F4:.5  A4:2 G4  F4:2 D4  C4:2 C4  F4:2 A4:.5 F4:.5  A4:2 G4  C5:3  C5:2 A4:.5 C5:.5  A4:2 G4  F4:2 D4  C4:2 C4  F4:2 A4:.5 F4:.5  A4:2 G4  F4:3') },
+  { id: 'saints', title: 'When the Saints Go Marching In', origin: 'American spiritual', week: 3, bpm: 88, beats: 4, range: 'C4–G4',
+    tip: 'The pickup "oh when the" starts on beat 2. Hold the G for the whole bar: that is where your breath control shows.',
+    notes: seq('r C4 E4 F4  G4:4  r C4 E4 F4  G4:4  r C4 E4 F4  G4:2 E4:2  C4:2 E4:2  D4:4  r E4 E4 D4  C4:2 C4 E4  G4:2 G4 G4  F4:4  r r E4 F4  G4:2 E4:2  C4:2 D4:2  C4:4') },
+  { id: 'happy-birthday', title: 'Happy Birthday', origin: 'Hill sisters, 1893', week: 4, bpm: 96, beats: 3, pickup: 1, range: 'G4–G5 (octave lever)',
+    tip: 'The leap G4 → G5 is the octave lever in action: same fingers, thumb rolls onto the lever, air speeds up.',
+    notes: seq('G4:.75 G4:.25  A4 G4 C5  B4:2 G4:.75 G4:.25  A4 G4 D5  C5:2 G4:.75 G4:.25  G5 E5 C5  B4 A4 F5:.75 F5:.25  E5 C5 D5  C5:2') },
+  /* exercises */
+  { id: 'ex-long-tones-1', title: 'Long tones: G, A, B', origin: 'Exercise', week: 1, bpm: 60, beats: 4, barLen: 6, exercise: true, range: 'G4–B4',
+    tip: 'Four counts of sound, two counts of rest. Aim for a tone that starts clean, stays level, and ends without a drop.',
+    notes: seq('G4:4 r:2 A4:4 r:2 B4:4 r:2 A4:4 r:2 G4:4 r:2') },
+  { id: 'ex-five-note', title: 'Five-note walk: G A B C D', origin: 'Exercise', week: 1, bpm: 60, beats: 4, exercise: true, range: 'G4–D5',
+    tip: 'Up and down, tongued. The C–D step is the thumb lift: thumb off for D, straight back on for C.',
+    notes: seq('G4 A4 B4 C5  D5:2 C5:2  B4 A4 G4:2  r:4  G4 A4 B4 C5  D5:2 C5:2  B4 A4 G4:2') },
+  { id: 'ex-low-notes', title: 'Low notes: E D C', origin: 'Exercise', week: 2, bpm: 60, beats: 4, exercise: true, range: 'C4–G4',
+    tip: 'Every pad sealed, slow warm air, top teeth firm, lower lip soft. If C refuses, go back to D and come down again.',
+    notes: seq('G4:2 E4:2  E4:4  E4:2 D4:2  D4:4  D4:2 C4:2  C4:4  C4 D4 E4 F4  G4:4') },
+  { id: 'ex-c-scale', title: 'C major scale (one octave)', origin: 'Exercise', week: 2, bpm: 66, beats: 4, exercise: true, range: 'C4–C5',
+    tip: 'Tongue each note the first time, then slur the whole scale in one breath on the repeat.',
+    notes: seq('C4 D4 E4 F4  G4 A4 B4 C5  C5 B4 A4 G4  F4 E4 D4 C4:4') },
+  { id: 'ex-arpeggio', title: 'Arpeggio: C E G C', origin: 'Exercise', week: 3, bpm: 66, beats: 4, exercise: true, range: 'C4–C5',
+    tip: 'Leaps need prepared fingers: have the next fingering ready before the air arrives.',
+    notes: seq('C4 E4 G4 C5  G4 E4 C4:2  C4 E4 G4 C5  G4 E4 C4:2') },
+  { id: 'ex-octaves', title: 'Octave slurs: E F G A', origin: 'Exercise', week: 4, bpm: 60, beats: 4, exercise: true, range: 'E4–A5',
+    tip: 'No tongue between the two notes: keep blowing, roll the thumb onto the lever, speed the air. The fingers do not move.',
+    notes: seq('E4:2 E5:2  E5:4  F4:2 F5:2  F5:4  G4:2 G5:2  G5:4  A4:2 A5:2  A5:4') },
+  { id: 'ex-two-octave-scale', title: 'C major, two octaves', origin: 'Exercise', week: 4, bpm: 60, beats: 4, exercise: true, range: 'C4–C6',
+    tip: 'From high D to E is the register change: thumb back on the hole and onto the lever in one motion.',
+    notes: seq('C4 D4 E4 F4  G4 A4 B4 C5  D5 E5 F5 G5  A5 B5 C6:2  C6 B5 A5 G5  F5 E5 D5 C5  B4 A4 G4 F4  E4 D4 C4:2') }
+];
+const SONG_BY_ID = {}; SONGS.forEach(s => { SONG_BY_ID[s.id] = s; });
+function songDurationBeats(song){ return song.notes.reduce((a, n) => a + n[1], 0); }
+
+/* ---------- 30-day plan ---------- */
+const WEEKS = [
+  { n: 1, title: 'First sounds', sub: 'Left hand only: G, A, B, then C and D' },
+  { n: 2, title: 'The right hand', sub: 'E, F, D and low C: the whole first octave' },
+  { n: 3, title: 'Making music', sub: 'Tongue, slur, loud, soft, real songs' },
+  { n: 4, title: 'Second octave', sub: 'The octave lever, two octaves, your first concert' }
+];
+const S = (t, min, kind) => ({ t, min, kind: kind || 'play' });
+const PLAN = [
+  { d: 1, title: 'Meet your Venova', goal: 'Assemble it, hold it right, and make your first sound on G.', notes: ['G4'], songs: [], lessons: ['assemble','hold','sound'],
+    steps: [S('Set up the reed and ligature (Start → Set up the reed)', 4, 'read'), S('Posture and hold: left hand on top, right thumb under the hook', 3, 'read'), S('First sound with no holes covered: 5 big breaths, blow firmly, any sound counts', 3), S('G long tones: thumb + three left fingers, 4 counts each, rest between, 6 times', 5), S('Swab the inside, cap on the mouthpiece', 1, 'care')],
+    tip: 'Squeaks and silence are normal today. The sound comes from a firm top-teeth contact, a soft cushion of lower lip, and more air than you expect.' },
+  { d: 2, title: 'Air, teeth, lip', goal: 'A steady G for 6 counts, and a new note: A.', notes: ['G4','A4'], songs: ['ex-long-tones-1'], lessons: ['sound','breath'],
+    steps: [S('Belly breathing: hand on your stomach, 5 slow breaths that push the hand out', 2, 'read'), S('Mouthpiece check: top teeth 1 cm from the tip, lower lip over the teeth; G for 4 counts, rest, 6 times', 5), S('The balanced-sound grid: try shallower, deeper, softer, louder; find the centre', 4, 'read'), S('New note A: lift the ring finger. A–G–A–G slowly', 5), S('Tongue starts: say "too" into the reed on G, 8 times', 3)],
+    tip: 'Start every note with the tongue, not with a puff of air. End it by stopping the air, not by closing the throat.' },
+  { d: 3, title: 'Three notes', goal: 'B, A and G in any order, and the first line of Hot Cross Buns.', notes: ['G4','A4','B4'], songs: ['hot-cross-buns','ex-long-tones-1'], lessons: ['sound'],
+    steps: [S('Warm-up: long tones G and A, 4 counts each', 4, 'warm'), S('New note B: thumb and index only. Long tones', 3), S('Pattern B–A–G, G–A–B with the metronome at 60', 5), S('Hot Cross Buns, first line, play-along at 60', 5), S('Write one line: what felt hardest today?', 1, 'read')],
+    tip: 'Keep the resting fingers hovering a finger-width above their holes. Far-away fingers are slow fingers.' },
+  { d: 4, title: 'Your first song', goal: 'Hot Cross Buns all the way through, in time.', notes: ['G4','A4','B4'], songs: ['hot-cross-buns'], lessons: ['rhythm'],
+    steps: [S('Warm-up: B, A, G long tones with the drone', 4, 'warm'), S('Rhythm basics: quarter, half, whole notes; tap along with the metronome', 3, 'read'), S('Hot Cross Buns with the play-along at 66, loop it', 7), S('Play it once without the app', 3), S('Record 20 seconds and listen back (Tuner → Check a recording)', 3)],
+    tip: 'A song is only "learned" when you can play it slower than you think you need to, without stopping.' },
+  { d: 5, title: 'Up to C and D', goal: 'C5 and the thumb-off high D.', notes: ['C5','D5'], songs: ['ex-five-note','au-clair'], lessons: ['hold'],
+    steps: [S('Warm-up: B, A, G', 3, 'warm'), S('New note C5: thumb + left middle finger only. Long tones', 3), S('New note D5: thumb OFF the back hole, middle finger only. Thumb-lift drill C–D–C–D', 5), S('Five-note walk G A B C D up and down at 60', 4), S('Au clair de la lune (part 1) play-along', 5)],
+    tip: 'When the thumb leaves the hole for D, it should stay a few millimetres away, ready to come back. Big thumb movements make slow passages.' },
+  { d: 6, title: 'Mary', goal: 'Mary Had a Little Lamb at 72 with the play-along.', notes: ['G4','A4','B4','D5'], songs: ['mary-g','hot-cross-buns'], lessons: [],
+    steps: [S('Warm-up: G to D walk', 4, 'warm'), S('Mary Had a Little Lamb, play-along at 66, then 72', 7), S('Hot Cross Buns at 80', 3), S('Drone on G: play G with it and listen for the wobble to slow down', 4)],
+    tip: 'When two pitches are close, you hear a slow "wah-wah" wobble. Slower wobble means closer in tune; no wobble means in tune.' },
+  { d: 7, title: 'Week 1 review', goal: 'Three songs from memory; rest the lip afterwards.', notes: ['G4','A4','B4','C5','D5'], songs: ['hot-cross-buns','au-clair','mary-g'], lessons: ['practice'],
+    steps: [S('Long tones G A B C D with the drone', 5, 'warm'), S('All three songs from memory, slowly', 8), S('Record Mary and listen: steady tone? squeaks? where?', 3), S('Note two things to fix next week', 1, 'read'), S('Save a backup of your progress (Plan → Backup)', 1, 'care')],
+    tip: 'A tired lip makes bad habits. Short daily sessions beat one long weekend session every time.' },
+  { d: 8, title: 'The right hand joins', goal: 'A clean E4 with both hands sealed.', notes: ['E4'], songs: ['ex-long-tones-1'], lessons: ['hold'],
+    steps: [S('Hand check: right thumb under the hook, pads flat over the holes, pinky relaxed above its keys', 2, 'read'), S('E long tones: more air, top teeth firm, lower lip soft', 5), S('Slurs G–E and B–E: keep blowing while the fingers move', 4), S('Pattern E G A B A G E at 60', 4), S('Mary (review)', 3)],
+    tip: 'Lower notes need a bigger, slower column of air. Think "warm air on cold hands".' },
+  { d: 9, title: 'F, and a song in F', goal: 'F4 in tune, and Hot Cross Buns in F.', notes: ['F4','E4'], songs: ['hot-cross-buns-f'], lessons: [],
+    steps: [S('Warm-up: E long tones', 3, 'warm'), S('New note F: right index finger only (German system, as shipped)', 3), S('F–E–F–E, then A–G–F slowly', 4), S('Hot Cross Buns in F, play-along', 5), S('Drone check on F and E', 3)],
+    tip: 'If F sounds sharp, you are probably biting. Drop the jaw a little and push more air, not more lip.' },
+  { d: 10, title: 'Low D', goal: 'D4 with every hole sealed, and Mary in F.', notes: ['D4'], songs: ['mary-f','ex-low-notes'], lessons: ['trouble'],
+    steps: [S('Warm-up: F and E', 3, 'warm'), S('New note D4: all six finger holes plus thumb. Slow warm air', 5), S('Walk E–D–E–D, then G F E D', 4), S('Mary in F, play-along', 5), S('Leak check: lift and re-seat each finger while holding D', 2)],
+    tip: 'If D squeaks or jumps up, a pad is leaking. Press slightly firmer with the ring fingers and check the right-hand angle.' },
+  { d: 11, title: 'Low C, the big one', goal: 'The lowest note, and the five-note C scale.', notes: ['C4'], songs: ['ex-low-notes','ode-to-joy'], lessons: ['trouble'],
+    steps: [S('Warm-up: D long tones', 3, 'warm'), S('Pinky keys: press both together while the other fingers stay sealed. Short C notes, then longer', 6), S('C D E F G up and down at 60', 5), S('Ode to Joy, first phrase, play-along slow', 5)],
+    tip: 'Yamaha\'s own advice for low notes: cover every hole with the ball of the finger, use plenty of air, and keep the top teeth firmly on the mouthpiece.' },
+  { d: 12, title: 'Ode to Joy and the scale', goal: 'One-octave C major scale and Ode to Joy at 72.', notes: ['C4','D4','E4','F4','G4','A4','B4','C5'], songs: ['ex-c-scale','ode-to-joy','twinkle'], lessons: ['basics'],
+    steps: [S('Warm-up: C D E F G walk', 4, 'warm'), S('C major scale, one octave, at 60', 5), S('Ode to Joy, full, play-along at 72', 7), S('Twinkle, first line', 3)],
+    tip: 'The scale is every song you will ever play, in order. Make it beautiful, not fast.' },
+  { d: 13, title: 'Twinkle and Lightly Row', goal: 'Two full songs in the first octave.', notes: ['C4','G4','A4'], songs: ['twinkle','lightly-row'], lessons: ['rhythm'],
+    steps: [S('Warm-up: the scale', 4, 'warm'), S('Twinkle, play-along at 76', 6), S('Lightly Row, play-along at 76', 5), S('Eighth notes: tap "1 & 2 & 3 & 4 &" with the metronome', 3, 'read')],
+    tip: 'Big leaps (C up to G) are a finger problem, not an air problem: prepare the new fingering a split second early.' },
+  { d: 14, title: 'Week 2 review', goal: 'The whole first octave, in tune, in songs.', notes: ['C4','D4','E4','F4','G4','A4','B4','C5'], songs: ['ode-to-joy','twinkle','frere-jacques'], lessons: ['practice'],
+    steps: [S('Long tones C to C5 with the drone', 5, 'warm'), S('Ode to Joy at 80 and Twinkle at 80', 7), S('Frère Jacques, first read-through', 4), S('Record Ode to Joy; listen for an even tone on every note', 3), S('Save a backup of your progress (Plan → Backup)', 1, 'care')],
+    tip: 'Compare this recording with Day 4. You will hear the difference before you can feel it.' },
+  { d: 15, title: 'Tongue and slur', goal: 'Tongued and slurred versions of the same line.', notes: [], songs: ['ex-c-scale','frere-jacques'], lessons: ['breath'],
+    steps: [S('Warm-up: scale slurred, one breath per four notes', 4, 'warm'), S('Articulation drill: 4 tongued then 4 slurred notes on each pitch', 5), S('Staccato "tut" versus legato "doo" on the scale', 4), S('Frère Jacques play-along', 5)],
+    tip: 'The tongue touches the tip of the reed lightly, like saying "too". A heavy tongue stops the air and thuds.' },
+  { d: 16, title: 'Loud and soft', goal: 'Dynamics without the pitch moving.', notes: [], songs: ['ex-long-tones-1','twinkle'], lessons: ['sound'],
+    steps: [S('Long tones: soft → loud → soft over 8 counts, pitch steady (watch the drone wobble)', 6, 'warm'), S('Balanced-sound grid again: loud without squeaks', 3, 'read'), S('Twinkle: first half soft, second half loud', 5), S('Scale at 72', 3)],
+    tip: 'Louder comes from more air, never from biting harder. Biting raises the pitch and chokes the reed.' },
+  { d: 17, title: 'Jingle Bells', goal: 'Jingle Bells chorus at 90.', notes: [], songs: ['jingle-bells'], lessons: [],
+    steps: [S('Warm-up', 3, 'warm'), S('Jingle Bells slow (72), then 90', 9), S('Breathe only at the long notes and rests', 3), S('Drone check on E and G', 2)],
+    tip: 'Plan your breaths like a swimmer: decide where before you start, and take them early.' },
+  { d: 18, title: 'Amazing Grace in 3', goal: 'A song in 3/4 with real phrasing.', notes: ['D4','C5'], songs: ['amazing-grace'], lessons: ['rhythm'],
+    steps: [S('Warm-up: F G A C D (the notes of the song)', 4, 'warm'), S('Count in 3 with the metronome: "1 2 3", clap on 1', 2, 'read'), S('Amazing Grace play-along at 66', 9), S('Hold the final F for 6 counts, perfectly steady', 2)],
+    tip: 'This is one of Yamaha\'s own sample songs for the Venova. Let the long notes bloom a little louder in the middle.' },
+  { d: 19, title: 'Saints', goal: 'When the Saints at 96, with its pickup notes.', notes: [], songs: ['saints','hot-cross-buns'], lessons: [],
+    steps: [S('Warm-up', 3, 'warm'), S('When the Saints, play-along at 76, then 96', 8), S('Tempo ladder: Hot Cross Buns at 100', 3), S('Echo game, 5 rounds', 3)],
+    tip: 'Pickup notes start before beat 1. Count "1 2" out loud, then come in on "3".' },
+  { d: 20, title: 'Scales and jumps', goal: 'Scale and arpeggio, tongued and slurred.', notes: [], songs: ['ex-c-scale','ex-arpeggio','ex-five-note'], lessons: [],
+    steps: [S('C major scale at 84, tongued then slurred', 5, 'warm'), S('Arpeggio C E G C5 and back', 4), S('Octave prep: C5–D5 thumb lifts, fast and small', 3), S('Song of your choice', 5)],
+    tip: 'Arpeggios skip notes, so the fingers move in groups. Move them together, like a chord on a piano.' },
+  { d: 21, title: 'Week 3 review and mini concert', goal: 'Two songs recorded back to back.', notes: [], songs: ['jingle-bells','amazing-grace','saints'], lessons: ['practice'],
+    steps: [S('Warm-up', 4, 'warm'), S('Record two songs back to back, no stopping', 6), S('Listen: name two things that are good and one to fix', 3, 'read'), S('Echo game', 3), S('Save a backup of your progress (Plan → Backup)', 1, 'care')],
+    tip: 'Performing (even for a phone) teaches you what practice cannot: how to keep going after a mistake.' },
+  { d: 22, title: 'The octave lever', goal: 'E5, F5, G5 with the lever, from the same fingerings.', notes: ['E5','F5','G5'], songs: ['ex-octaves'], lessons: ['hold'],
+    steps: [S('Thumb drill without blowing: roll the left thumb onto the lever while it still covers the hole', 2, 'read'), S('E4 → E5 slurs: same fingers, add the lever, faster air', 6), S('F and G octave slurs', 5), S('E5 F5 G5 long tones with the drone', 4)],
+    tip: 'Yamaha\'s rule: the octave key is only for notes above high D. For high notes think "faster air and firmer corners", never "bite".' },
+  { d: 23, title: 'Up to high C', goal: 'G5 A5 B5 C6, and Happy Birthday.', notes: ['G5','A5','B5','C6'], songs: ['happy-birthday','ex-octaves'], lessons: [],
+    steps: [S('Warm-up: octave slurs', 4, 'warm'), S('G5 A5 B5 C6 up and down, slowly', 5), S('Happy Birthday play-along (the G4 → G5 leap)', 7), S('Drone check on A5', 2)],
+    tip: 'High notes are easier when the low notes are strong. If the top chokes, go back down and bring the same air up.' },
+  { d: 24, title: 'Two-octave scale', goal: 'C4 to C6 and back, slowly and evenly.', notes: ['D5','E5'], songs: ['ex-two-octave-scale'], lessons: [],
+    steps: [S('Warm-up', 3, 'warm'), S('C major, two octaves, at 60', 6), S('Upper-register long tones with the drone', 5), S('Song of your choice', 4)],
+    tip: 'The crossing from D5 to E5 is the only tricky spot: thumb back on the hole and onto the lever in one motion.' },
+  { d: 25, title: 'The black notes', goal: 'B♭ and a first F♯.', notes: ['As4','Fs4'], songs: ['ex-c-scale'], lessons: ['trouble'],
+    steps: [S('Warm-up', 3, 'warm'), S('B♭ long tones, then A–B♭–A', 5), S('F♯ long tones: be patient, this is the Venova\'s weak spot', 4), S('F major scale slowly: F G A B♭ C D E F', 5)],
+    tip: 'Yamaha says it plainly: F♯, G♯ and B♭ tend to play sharp and resonate poorly. Adjust with air and embouchure, and always use the tuner.' },
+  { d: 26, title: 'Full-tempo songs', goal: 'Three songs at their real tempos.', notes: [], songs: ['jingle-bells','amazing-grace','saints'], lessons: [],
+    steps: [S('Warm-up', 3, 'warm'), S('Jingle Bells at 100', 5), S('Amazing Grace with dynamics', 5), S('When the Saints at 100', 5)],
+    tip: 'Speed is a by-product of accuracy. If a bar breaks at 100, play that bar alone at 70, five times, then rejoin.' },
+  { d: 27, title: 'Ears', goal: 'Play short patterns back by ear.', notes: [], songs: ['twinkle'], lessons: ['basics'],
+    steps: [S('Warm-up', 3, 'warm'), S('Echo game, 10 rounds', 6), S('Twinkle by ear starting on G (G G D D E E D…)', 5), S('Drone tuning on C4 and C5', 3)],
+    tip: 'Sing the pattern first, then play it. If you can sing it, your fingers can find it.' },
+  { d: 28, title: 'Phrasing and breath', goal: 'Four-bar phrases shaped like sentences.', notes: [], songs: ['amazing-grace','ode-to-joy'], lessons: ['breath'],
+    steps: [S('Warm-up', 3, 'warm'), S('Amazing Grace: one breath per 4 bars, soft → loud → soft', 7), S('Ode to Joy with dynamics', 4), S('One long tone of 12 steady counts', 3), S('Save a backup of your progress (Plan → Backup)', 1, 'care')],
+    tip: 'A phrase is a musical sentence. Give it a start, a high point and an ending, and the listener will follow you.' },
+  { d: 29, title: 'Dress rehearsal', goal: 'Your 3-song set, start to finish, no stopping.', notes: [], songs: ['ode-to-joy','amazing-grace','happy-birthday'], lessons: ['practice'],
+    steps: [S('Warm-up', 4, 'warm'), S('Run the set in order, no stopping', 8), S('Fix the roughest four bars', 4), S('Record the set', 3)],
+    tip: 'Choose any three songs from the library for your set. Put the easiest one first.' },
+  { d: 30, title: 'Concert day', goal: 'Perform the set and compare with Day 4.', notes: [], songs: ['ode-to-joy','amazing-grace','happy-birthday'], lessons: ['practice'],
+    steps: [S('Warm-up', 4, 'warm'), S('Perform the set: record it, or play it for someone', 8), S('Listen to it next to your Day 4 recording', 3), S('Plan the next 30 days: more songs, the chromatic notes, reading the staff', 3, 'read')],
+    tip: 'Thirty days ago this was a plastic tube. Today it is your instrument. Keep the daily habit and the next month will go twice as fast.' }
+];
+
+/* ---------- Audio engine (Web Audio) ---------- */
+const AudioEngine = (() => {
+  let ctx = null, master = null;
+  const voices = new Set();
+  function ensure(){
+    if (!ctx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      ctx = new AC();
+      master = ctx.createGain(); master.gain.value = 0.9; master.connect(ctx.destination);
+    }
+    if (ctx.state === 'suspended') { try { ctx.resume(); } catch (e) {} }
+    return ctx;
+  }
+  function tone(freq, start, dur, opts){
+    opts = opts || {};
+    const c = ensure(); if (!c) return null;
+    const t0 = (start == null) ? c.currentTime + 0.02 : start;
+    const vol = opts.vol == null ? 0.42 : opts.vol;
+    const o1 = c.createOscillator(); o1.type = 'sawtooth'; o1.frequency.value = freq;
+    const o2 = c.createOscillator(); o2.type = 'triangle'; o2.frequency.value = freq; o2.detune.value = 4;
+    const lfo = c.createOscillator(); lfo.frequency.value = 5.3;
+    const lfoG = c.createGain(); lfoG.gain.setValueAtTime(0, t0); lfoG.gain.linearRampToValueAtTime(opts.vibrato === false ? 0 : 5, t0 + Math.min(0.5, dur));
+    lfo.connect(lfoG); lfoG.connect(o1.detune); lfoG.connect(o2.detune);
+    const g1 = c.createGain(); g1.gain.value = 0.5; const g2 = c.createGain(); g2.gain.value = 0.5;
+    const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = Math.min(freq * 4.5, 6500); lp.Q.value = 1.1;
+    const env = c.createGain();
+    const tEnd = t0 + dur;
+    env.gain.setValueAtTime(0.0001, t0);
+    env.gain.linearRampToValueAtTime(vol, t0 + 0.03);
+    env.gain.linearRampToValueAtTime(vol * 0.85, t0 + 0.14);
+    env.gain.setValueAtTime(vol * 0.85, Math.max(t0 + 0.14, tEnd - 0.06));
+    env.gain.linearRampToValueAtTime(0.0001, tEnd + 0.03);
+    o1.connect(g1); o2.connect(g2); g1.connect(lp); g2.connect(lp); lp.connect(env); env.connect(master);
+    o1.start(t0); o2.start(t0); lfo.start(t0);
+    o1.stop(tEnd + 0.06); o2.stop(tEnd + 0.06); lfo.stop(tEnd + 0.06);
+    const v = { stop(){ try { const n = c.currentTime; env.gain.cancelScheduledValues(n); env.gain.setValueAtTime(Math.max(env.gain.value, 0.0001), n); env.gain.exponentialRampToValueAtTime(0.0001, n + 0.06); o1.stop(n + 0.08); o2.stop(n + 0.08); lfo.stop(n + 0.08); } catch (e) {} voices.delete(v); } };
+    voices.add(v); o1.onended = () => voices.delete(v);
+    return v;
+  }
+  function click(start, accent){
+    const c = ensure(); if (!c) return null;
+    const o = c.createOscillator(); o.type = 'square'; o.frequency.value = accent ? 1700 : 1150;
+    const g = c.createGain(); g.gain.setValueAtTime(0.0001, start); g.gain.exponentialRampToValueAtTime(accent ? 0.35 : 0.22, start + 0.002); g.gain.exponentialRampToValueAtTime(0.0001, start + 0.045);
+    o.connect(g); g.connect(master); o.start(start); o.stop(start + 0.06);
+    const v = { stop(){ try { o.stop(); } catch (e) {} voices.delete(v); } };
+    voices.add(v); o.onended = () => voices.delete(v);
+    return v;
+  }
+  function chime(){
+    const c = ensure(); if (!c) return; const t = c.currentTime + 0.02;
+    [523.25, 659.25, 783.99].forEach((f, i) => { const o = c.createOscillator(); o.type = 'sine'; o.frequency.value = f; const g = c.createGain(); g.gain.setValueAtTime(0.0001, t + i * 0.12); g.gain.exponentialRampToValueAtTime(0.3, t + i * 0.12 + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + i * 0.12 + 0.6); o.connect(g); g.connect(master); o.start(t + i * 0.12); o.stop(t + i * 0.12 + 0.7); });
+  }
+  function stopAll(){ Array.from(voices).forEach(v => v.stop()); }
+  return { ensure, tone, click, chime, stopAll, now(){ const c = ensure(); return c ? c.currentTime : 0; }, get context(){ return ctx; } };
+})();
+
+/* ---------- Pitch detection: normalized autocorrelation with parabolic interpolation ---------- */
+function detectPitch(buf, sampleRate, opts){
+  opts = opts || {};
+  const n = buf.length;
+  let rms = 0; for (let i = 0; i < n; i++) rms += buf[i] * buf[i]; rms = Math.sqrt(rms / n);
+  if (rms < (opts.minRms || 0.008)) return null;
+  const fMin = opts.fMin || 150, fMax = opts.fMax || 1500;
+  const minLag = Math.floor(sampleRate / fMax), maxLag = Math.min(Math.floor(sampleRate / fMin), n >> 1);
+  const corr = new Float32Array(maxLag + 2);
+  let best = -1, bestLag = -1;
+  for (let lag = minLag; lag <= maxLag; lag++) {
+    let num = 0, d1 = 0, d2 = 0;
+    for (let i = 0, j = lag; j < n; i++, j++) { const a = buf[i], b = buf[j]; num += a * b; d1 += a * a; d2 += b * b; }
+    const v = num / (Math.sqrt(d1 * d2) + 1e-12);
+    corr[lag] = v;
+    if (v > best) { best = v; bestLag = lag; }
+  }
+  if (best < (opts.minClarity || 0.85)) return null;
+  // prefer the smallest lag that is nearly as good as the best (avoids octave-too-low errors)
+  let lag = bestLag;
+  for (let l = minLag; l < bestLag; l++) { if (corr[l] >= best * 0.93 && (l === minLag || corr[l] >= corr[l - 1]) && corr[l] >= corr[l + 1]) { lag = l; break; } }
+  let shift = 0;
+  if (lag > minLag && lag < maxLag) { const y0 = corr[lag - 1], y1 = corr[lag], y2 = corr[lag + 1]; const den = (y0 - 2 * y1 + y2); if (den !== 0) shift = 0.5 * (y0 - y2) / den; }
+  const period = lag + shift;
+  return { freq: sampleRate / period, clarity: corr[lag], rms };
+}
+
+/* Analyse a decoded buffer -> frames of {t, freq|null} */
+function analyseBuffer(data, sampleRate, a4){
+  const win = 2048, hop = 1024, out = [];
+  for (let i = 0; i + win <= data.length; i += hop) {
+    const r = detectPitch(data.subarray(i, i + win), sampleRate, { minRms: 0.01 });
+    out.push({ t: i / sampleRate, freq: r ? r.freq : null, midi: r ? freqToMidi(r.freq, a4) : null });
+  }
+  return out;
+}
+
+/* ---------- Small helpers ---------- */
+function esc(s){ return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]); }
+function noteColor(id, theme){ const n = NOTES[id]; return LETTER_COLORS[theme === 'dark' ? 'dark' : 'light'][n.letter]; }
+function noteTileStyle(id, theme){
+  const n = NOTES[id]; const pal = LETTER_COLORS[theme === 'dark' ? 'dark' : 'light'];
+  if (!n.sharp) return `background:${pal[n.letter]};color:${LETTER_INK_DARK[n.letter] && theme !== 'dark' ? '#17202A' : '#FFFFFF'}`;
+  return `background:linear-gradient(135deg, ${pal[n.letter]} 0 50%, ${pal[n.upperLetter]} 50% 100%);color:#FFFFFF;text-shadow:0 1px 2px rgba(0,0,0,.35)`;
+}
+function fmtTime(sec){ sec = Math.max(0, Math.round(sec)); return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); }
+function todayKey(){ const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+
+</script>
+<script>
+(function(){
+'use strict';
+/* ---------- app state ---------- */
+const App = { view: 'start', sel: 'G4', system: 'german', a4: 440, showSharps: false, profile: null, state: null, filter: 'all', selDay: null, cloud: { db: null, ok: false, saving: null, dirty: false }, inFrame: false, standalone: false, ios: false };
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+const VIDEO_IDS = ['3XCan3cV76Q','5ASzkPn3_sw','iddfvxUcHS0','Sh_uyLuBjMg','dyVwI5VcCc8','zetq8t2qnOE','jhFMyYetlyE','5DVqVZPE0Wo'];
+const VIDEO_TITLES = ['Lesson video 1', 'Lesson video 2: Tips on Making Sound', 'Lesson video 3', 'Lesson video 4', 'Lesson video 5', 'Lesson video 6', 'Lesson video 7', 'Lesson video 8'];
+const COLORS = ['#3F6FD8','#D8663F','#2E9D5E','#9A5BD6','#D94A8C','#1A9FB5','#B98600','#5C6B7A'];
+try { App.inFrame = window.self !== window.top; } catch (e) { App.inFrame = true; }
+App.ios = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+App.standalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+
+function themeName(){ const t = document.documentElement.getAttribute('data-theme'); if (t === 'dark' || t === 'light') return t; return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+let toastT = 0;
+function toast(msg){ const el = $('#toast'); el.textContent = msg; el.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), 2400); }
+function tile(id, extraClass, flag){ const n = NOTES[id]; return `<span class="tile ${extraClass || ''}" data-note="${id}" style="${noteTileStyle(id, themeName())}">${n.name}<span class="oct">${n.oct}</span>${flag ? `<span class="flag">${flag}</span>` : ''}</span>`; }
+function playNote(id, dur){ AudioEngine.ensure(); AudioEngine.tone(noteFreq(id, App.a4), null, dur || 0.9); }
+function fmtDate(key){ const [y, m, d] = key.split('-').map(Number); const dt = new Date(y, m - 1, d); return dt.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' }); }
+function dateKey(dt){ return dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2, '0') + '-' + String(dt.getDate()).padStart(2, '0'); }
+
+/* ---------- iOS audio unlock, wake lock ---------- */
+let unlocked = false, silentEl = null;
+function unlockAudio(){
+  const c = AudioEngine.ensure(); if (!c) return;
+  try { if (c.state === 'suspended') c.resume(); const b = c.createBuffer(1, 1, 22050); const s = c.createBufferSource(); s.buffer = b; s.connect(c.destination); s.start(0); } catch (e) {}
+  if (App.ios && !silentEl) { try { silentEl = document.createElement('audio'); silentEl.setAttribute('playsinline', ''); silentEl.loop = true; silentEl.src = 'data:audio/wav;base64,UklGRsQPAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YaAPAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA'; silentEl.play().catch(() => {}); } catch (e) {} }
+  else if (silentEl && silentEl.paused) silentEl.play().catch(() => {});
+  unlocked = true;
+}
+document.addEventListener('touchend', unlockAudio, { passive: true });
+document.addEventListener('click', unlockAudio);
+let wakeLock = null;
+async function keepAwake(on){ try { if (on && !wakeLock && 'wakeLock' in navigator) { wakeLock = await navigator.wakeLock.request('screen'); wakeLock.addEventListener('release', () => { wakeLock = null; }); } else if (!on && wakeLock) { await wakeLock.release(); wakeLock = null; } } catch (e) { wakeLock = null; } }
+function updateAwake(){ keepAwake(!!(Player.playing || Timer.id || Metro.running || LT.stream)); }
+
+/* ---------- storage + profiles ---------- */
+const LS = { get(k){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } }, set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }, del(k){ try { localStorage.removeItem(k); } catch (e) {} } };
+function slug(name){ return (name || 'me').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'me'; }
+function hashPin(p){ let h = 5381; for (let i = 0; i < p.length; i++) h = ((h << 5) + h + p.charCodeAt(i)) >>> 0; return 'h' + h.toString(36); }
+function freshState(){ return { v: 2, updatedAt: 0, startDate: null, days: {}, log: [] }; }
+const Profiles = {
+  list(){ return LS.get('vs.profiles') || []; },
+  save(list){ LS.set('vs.profiles', list); },
+  get(id){ return this.list().find(p => p.id === id) || null; },
+  create(name, color, pin){ const id = 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); const list = this.list(); list.push({ id, name: name.trim().slice(0, 24) || 'Player', color: color || COLORS[list.length % COLORS.length], pin: pin ? hashPin(pin) : null, created: Date.now() }); this.save(list); return id; },
+  update(id, patch){ const list = this.list(); const p = list.find(x => x.id === id); if (p) Object.assign(p, patch); this.save(list); },
+  remove(id){ this.save(this.list().filter(p => p.id !== id)); LS.del('vs.p.' + id); }
+};
+function migrateV1(){
+  if (Profiles.list().length) return;
+  const prefs = LS.get('venova.prefs') || {};
+  const name = prefs.player || 'Hassan';
+  const id = Profiles.create(name, COLORS[0], null);
+  const old = LS.get('venova.progress.' + slug(name));
+  if (old && old.days) { const st = Object.assign(freshState(), { days: old.days || {}, startDate: old.startDate || null, updatedAt: old.updatedAt || 0 }); // rebuild a log from the completed steps
+    Object.keys(st.days).forEach(k => { const ds = st.days[k]; const p = PLAN[+k - 1]; if (!p) return; (ds.steps || []).forEach((on, i) => { if (on && p.steps[i]) st.log.push({ t: ds.doneAt || todayKey(), ts: st.updatedAt || Date.now(), day: +k, step: i, min: p.steps[i].min }); }); });
+    LS.set('vs.p.' + id, st); }
+  LS.set('vs.active', id);
+  if (prefs.a4 || prefs.system) LS.set('vs.prefs', { a4: prefs.a4 || 440, system: prefs.system || 'german', showSharps: !!prefs.showSharps });
+}
+function loadPrefs(){ const p = LS.get('vs.prefs') || {}; App.a4 = p.a4 || 440; App.system = p.system || 'german'; App.showSharps = !!p.showSharps; App.installDismissed = !!p.installDismissed; }
+function savePrefs(){ LS.set('vs.prefs', { a4: App.a4, system: App.system, showSharps: App.showSharps, installDismissed: !!App.installDismissed }); }
+function loadProfile(id){
+  const p = Profiles.get(id) || Profiles.list()[0]; if (!p) return false;
+  App.profile = p; LS.set('vs.active', p.id);
+  App.state = LS.get('vs.p.' + p.id) || freshState(); if (!App.state.log) App.state.log = []; if (!App.state.days) App.state.days = {};
+  App.selDay = null; renderPlayerChip(); return true;
+}
+function saveState(){ App.state.updatedAt = Date.now(); LS.set('vs.p.' + App.profile.id, App.state); queueCloudSave(); renderBackupStatus(); }
+function dayState(d){ const k = String(d); if (!App.state.days[k]) App.state.days[k] = { done: false, doneAt: null, steps: PLAN[d - 1].steps.map(() => false), note: '' }; const ds = App.state.days[k]; while (ds.steps.length < PLAN[d - 1].steps.length) ds.steps.push(false); return ds; }
+function nextDay(){ for (let d = 1; d <= 30; d++) { if (!(App.state.days[d] && App.state.days[d].done)) return d; } return 30; }
+function daysDone(){ return Object.values(App.state.days).filter(x => x.done).length; }
+function minutesTotal(){ return App.state.log.reduce((a, e) => a + (e.min || 0), 0); }
+function logAdd(entry){ App.state.log.push(Object.assign({ t: todayKey(), ts: Date.now() }, entry)); if (!App.state.startDate) App.state.startDate = todayKey(); }
+function logRemoveStep(day, step){ for (let i = App.state.log.length - 1; i >= 0; i--) { const e = App.state.log[i]; if (e.day === day && e.step === step) { App.state.log.splice(i, 1); return; } } }
+function minutesByDate(){ const m = {}; App.state.log.forEach(e => { m[e.t] = (m[e.t] || 0) + (e.min || 0); }); return m; }
+function streak(){ const dates = new Set(App.state.log.map(e => e.t)); Object.values(App.state.days).forEach(x => { if (x.done && x.doneAt) dates.add(x.doneAt); }); if (!dates.size) return 0; const d = new Date(); if (!dates.has(dateKey(d))) d.setDate(d.getDate() - 1); let n = 0; while (dates.has(dateKey(d))) { n++; d.setDate(d.getDate() - 1); } return n; }
+function renderPlayerChip(){ const p = App.profile; $('#playerAvatar').textContent = (p.name[0] || '?').toUpperCase(); $('#playerAvatar').style.background = p.color; $('#playerName').textContent = p.name; }
+
+/* ---------- cloud sync (artifact db; silently absent outside Claude) ---------- */
+async function initCloud(){
+  try {
+    if (!(window.claude && typeof window.claude.use === 'function')) return;
+    const db = await window.claude.use('db'); if (!db) return;
+    App.cloud.db = db;
+    let snap = await db.doc('progress/' + App.profile.id).get();
+    if (!(snap && snap.exists)) { const legacy = await db.doc('progress/' + slug(App.profile.name)).get(); if (legacy && legacy.exists) snap = legacy; }
+    if (snap && snap.exists) {
+      const remote = snap.data();
+      if (remote && (remote.updatedAt || 0) > (App.state.updatedAt || 0)) { App.state = Object.assign(freshState(), remote); if (!App.state.log) App.state.log = []; LS.set('vs.p.' + App.profile.id, App.state); renderAll(); }
+      else if ((App.state.updatedAt || 0) > (remote.updatedAt || 0)) queueCloudSave();
+    } else if (App.state.updatedAt) queueCloudSave();
+    App.cloud.ok = true; renderBackupStatus();
+  } catch (e) { App.cloud.ok = false; }
+}
+let cloudTimer = 0;
+function queueCloudSave(){ if (!App.cloud.db) return; clearTimeout(cloudTimer); cloudTimer = setTimeout(cloudSave, 1500); }
+async function cloudSave(){
+  if (!App.cloud.db) return; if (App.cloud.saving) { App.cloud.dirty = true; return; }
+  App.cloud.dirty = false;
+  try { App.cloud.saving = App.cloud.db.doc('progress/' + App.profile.id).set(JSON.parse(JSON.stringify(Object.assign({ player: App.profile.name }, App.state)))); await App.cloud.saving; } catch (e) {}
+  App.cloud.saving = null; if (App.cloud.dirty) queueCloudSave();
+}
+
+/* ---------- sheet (bottom dialog) ---------- */
+function openSheet(html){ $('#sheetPanel').innerHTML = html; $('#sheet').hidden = false; document.body.style.overflow = 'hidden'; }
+function closeSheet(){ $('#sheet').hidden = true; document.body.style.overflow = ''; }
+$('#sheetBack').addEventListener('click', closeSheet);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
+
+/* ---------- players ---------- */
+function playersSheet(){
+  const list = Profiles.list();
+  openSheet(`<h2>Who's practising?</h2>
+    <div class="plist" style="margin-top:10px">${list.map(p => { const st = LS.get('vs.p.' + p.id) || freshState(); const done = Object.values(st.days || {}).filter(x => x.done).length; return `<button class="pitem${p.id === App.profile.id ? ' on' : ''}" data-id="${p.id}"><span class="avatar" style="background:${p.color}">${esc((p.name[0] || '?').toUpperCase())}</span><span><b>${esc(p.name)}</b>${p.pin ? ' <span class="small muted">(PIN)</span>' : ''}<br><span class="m">${done} of 30 days · ${(st.log || []).reduce((a, e) => a + (e.min || 0), 0)} min</span></span></button>`; }).join('')}</div>
+    <div class="row" style="margin-top:12px"><button class="btn" id="addPlayer">Add a player</button><button class="btn ghost" id="editPlayer">Edit ${esc(App.profile.name)}</button></div>
+    <p class="small muted" style="margin-top:10px">Each player has separate progress on this device. To move a player to another phone, use Plan → Backup.</p>`);
+  $$('#sheetPanel .pitem').forEach(b => b.addEventListener('click', () => switchTo(b.dataset.id)));
+  $('#addPlayer').addEventListener('click', () => playerForm(null));
+  $('#editPlayer').addEventListener('click', () => playerForm(App.profile.id));
+}
+function switchTo(id){
+  const p = Profiles.get(id); if (!p) return;
+  if (p.id === App.profile.id) { closeSheet(); return; }
+  if (p.pin) { pinPrompt(p, () => { finishSwitch(id); }); return; }
+  finishSwitch(id);
+}
+function finishSwitch(id){ stopPlayer(); Timer.stop(); loadProfile(id); renderAll(); closeSheet(); toast('Now practising as ' + App.profile.name); initCloud(); }
+function pinPrompt(p, onOk){
+  openSheet(`<h2>${esc(p.name)}'s PIN</h2><p class="small muted">Four digits.</p><div class="row" style="margin-top:8px"><input class="pin" id="pinIn" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" aria-label="PIN"><button class="btn" id="pinGo">Open</button></div><p class="small muted" id="pinMsg" style="margin-top:8px"></p>`);
+  const go = () => { const v = $('#pinIn').value.trim(); if (hashPin(v) === p.pin) onOk(); else { $('#pinMsg').textContent = 'That PIN does not match.'; $('#pinIn').value = ''; } };
+  $('#pinGo').addEventListener('click', go); $('#pinIn').addEventListener('keydown', e => { if (e.key === 'Enter') go(); }); setTimeout(() => $('#pinIn').focus(), 50);
+}
+function playerForm(id){
+  const p = id ? Profiles.get(id) : { name: '', color: COLORS[Profiles.list().length % COLORS.length], pin: null };
+  openSheet(`<h2>${id ? 'Edit player' : 'New player'}</h2>
+    <label class="small muted" style="display:block;margin-top:10px">Name<br><input type="text" id="pfName" value="${esc(p.name)}" maxlength="24" placeholder="e.g. Rim" style="width:100%;margin-top:4px"></label>
+    <div class="small muted" style="margin-top:10px">Colour</div>
+    <div class="swatches" id="pfColors" style="margin-top:6px">${COLORS.map(c => `<button class="swatch${c === p.color ? ' on' : ''}" data-c="${c}" style="background:${c}" aria-label="colour"></button>`).join('')}</div>
+    <label class="small muted" style="display:block;margin-top:10px">PIN (optional, 4 digits)<br><input type="password" id="pfPin" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" placeholder="${p.pin ? 'keep current PIN' : 'none'}" style="width:160px;margin-top:4px"></label>
+    ${p.pin ? '<label class="toggle" style="margin-top:8px"><input type="checkbox" id="pfClearPin"> remove the PIN</label>' : ''}
+    <div class="row" style="margin-top:14px"><button class="btn" id="pfSave">${id ? 'Save' : 'Create player'}</button><button class="btn ghost" id="pfCancel">Cancel</button>${id && Profiles.list().length > 1 ? '<button class="btn danger sm" id="pfDelete" style="margin-left:auto">Delete player</button>' : ''}</div>`);
+  let color = p.color;
+  $$('#pfColors .swatch').forEach(b => b.addEventListener('click', () => { color = b.dataset.c; $$('#pfColors .swatch').forEach(x => x.classList.toggle('on', x === b)); }));
+  $('#pfCancel').addEventListener('click', playersSheet);
+  $('#pfSave').addEventListener('click', () => {
+    const name = $('#pfName').value.trim(); if (!name) { toast('Give the player a name'); return; }
+    const pinV = $('#pfPin').value.trim(); if (pinV && !/^\d{4}$/.test(pinV)) { toast('The PIN must be exactly 4 digits'); return; }
+    if (id) { const patch = { name, color }; if (pinV) patch.pin = hashPin(pinV); if ($('#pfClearPin') && $('#pfClearPin').checked) patch.pin = null; Profiles.update(id, patch); if (id === App.profile.id) { App.profile = Profiles.get(id); renderPlayerChip(); renderPlan(); } toast('Saved'); playersSheet(); }
+    else { const nid = Profiles.create(name, color, pinV || null); finishSwitch(nid); }
+  });
+  const del = $('#pfDelete'); if (del) del.addEventListener('click', () => { if (del.dataset.sure) { const others = Profiles.list().filter(x => x.id !== id); Profiles.remove(id); if (App.profile.id === id) loadProfile(others[0].id); renderAll(); closeSheet(); toast('Player deleted'); } else { del.dataset.sure = '1'; del.textContent = 'Tap again to delete everything for this player'; } });
+}
+$('#playerBtn').addEventListener('click', playersSheet);
+
+/* ---------- navigation ---------- */
+function show(view, opts){
+  opts = opts || {}; App.view = view;
+  $$('.view').forEach(v => v.classList.toggle('active', v.id === 'view-' + view));
+  $$('.tabs button').forEach(b => b.classList.toggle('on', b.dataset.view === view));
+  if (location.hash !== '#' + view) { try { history.replaceState(null, '', '#' + view); } catch (e) {} }
+  if (!opts.keepScroll) window.scrollTo(0, 0);
+}
+$$('.tabs button').forEach(b => b.addEventListener('click', () => show(b.dataset.view)));
+window.addEventListener('hashchange', () => { const v = location.hash.replace('#', ''); if (['start','notes','songs','tuner','plan'].includes(v) && v !== App.view) show(v); });
+function openLesson(id){ show('start'); const el = $('#lesson-' + id); if (el) { el.open = true; setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50); } }
+
+/* ---------- START ---------- */
+function renderToday(){
+  const d = nextDay(); const p = PLAN[d - 1]; const done = daysDone(); const allDone = done >= 30;
+  $('#todayCard').innerHTML = `
+    <div class="row between"><span class="badge w${Math.min(4, Math.ceil(d / 7))}">Week ${Math.min(4, Math.ceil(d / 7))} · Day ${d}</span><span class="muted small">${esc(App.profile.name)} · ${done} of 30 days</span></div>
+    <h2 style="margin-top:8px;font-size:26px">${allDone ? 'You finished the 30 days' : esc(p.title)}</h2>
+    <p>${allDone ? 'Keep the habit: pick songs from the library, work on the black notes, and start reading the staff.' : esc(p.goal)}</p>
+    <div class="row" style="margin-top:12px">
+      <button class="btn" id="goToday"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l14 8-14 8z"/></svg>${done === 0 ? 'Start day 1' : 'Open today\'s practice'}</button>
+      ${p.notes.length ? `<button class="btn ghost" id="goNotes">Today\'s notes: ${p.notes.map(n => NOTES[n].label).join(', ')}</button>` : ''}
+    </div>`;
+  $('#goToday').addEventListener('click', () => { App.selDay = d; renderPlan(); show('plan'); });
+  const gn = $('#goNotes'); if (gn) gn.addEventListener('click', () => { App.sel = p.notes[0]; renderNotes(); show('notes'); });
+  const ic = $('#installCard'); ic.hidden = !(App.ios && !App.standalone && !App.inFrame && !App.installDismissed && /^https?:/.test(location.protocol));
+}
+$('#installDismiss').addEventListener('click', () => { App.installDismissed = true; savePrefs(); $('#installCard').hidden = true; });
+function renderStaticStart(){
+  $('#anatomy').innerHTML = fingeringSVG(FINGERINGS.D4.main, { labels: true });
+  $('#holdG').innerHTML = fingeringSVG(FINGERINGS.G4.main);
+  const rows = ['Too much air', 'Right amount', 'Too little air'], cols = ['Mouthpiece too shallow', 'Right depth', 'Mouthpiece too deep'];
+  const cells = [
+    ['Squeaks or nothing', 'Cause: biting plus too little mouthpiece in the mouth. Fix: take a few millimetres more mouthpiece, soften the jaw, keep the air.'],
+    ['Forte: loud and full', 'Good for loud passages. If it gets edgy, ease the air back a little and keep the corners firm.'],
+    ['Wild squeaks and honks', 'Cause: a loose, open mouth plus too much mouthpiece. Fix: firm the corners, pull back a few millimetres.'],
+    ['Thin, bright, pinched', 'Cause: too little mouthpiece. Fix: a touch more mouthpiece so the reed can vibrate freely.'],
+    ['Well-balanced tone', 'This is home. Memorise how it feels: anchored top teeth, cushioned lower lip, firm corners, steady air.'],
+    ['Dark, tubby, hard to control', 'Cause: too much mouthpiece. Fix: a touch less mouthpiece, corners firm, chin flat.'],
+    ['No sound', 'Cause: biting plus too little air. Fix: breathe deeper, relax the bite, blow as if fogging a window.'],
+    ['Piano: soft and sweet', 'Lovely for quiet passages. Keep the air fast even when it is small, or the pitch sags.'],
+    ['Airy, no centre, or silence', 'Cause: a loose mouth plus too little air. Fix: seal the corners and blow more.']
+  ];
+  let g = '<div></div>' + cols.map(c => `<div class="lab">${c}</div>`).join('');
+  rows.forEach((r, i) => { g += `<div class="lab">${r}</div>`; for (let j = 0; j < 3; j++) { const k = i * 3 + j; g += `<button class="bs-cell${k === 4 ? ' center' : ''}" data-k="${k}">${cells[k][0]}</button>`; } });
+  $('#bsGrid').innerHTML = g;
+  $$('#bsGrid .bs-cell').forEach(b => b.addEventListener('click', () => { $$('#bsGrid .bs-cell').forEach(x => x.classList.remove('on')); b.classList.add('on'); const c = cells[+b.dataset.k]; $('#bsOut').innerHTML = `<b>${c[0]}.</b> ${c[1]}`; }));
+  const TS = [
+    ['No sound', [['Reed not seated properly', 'Re-seat it: flat side on the table, a hair of mouthpiece tip visible above the reed tip, ligature centred and just snug.'], ['Not enough air', 'Take a deeper breath and blow more firmly than feels polite. The Venova needs more air than a recorder.'], ['Biting (too much lower-lip pressure)', 'Loosen the jaw. Support comes from the top teeth and the mouth corners, not from squeezing the reed.'], ['Mouth too loose', 'Close the lips tighter around the mouthpiece until the sound focuses, stopping before it squeaks.']]],
+    ['Squeaks', [['Mouthpiece too deep', 'Pull back a few millimetres; use the balanced-sound grid.'], ['Biting', 'Soften the jaw, flatten the chin, firm the corners instead.'], ['Wrong angle', 'Angle the instrument further down so the reed meets the lower lip squarely.'], ['A hole not fully covered', 'The number one cause for beginners. Use the ball of the finger, flat; check each finger in a mirror.']]],
+    ['Low notes won\'t speak', [['Top teeth not resting firmly on the mouthpiece', 'Use the left thumb to push the instrument gently up into the top teeth.'], ['Too little air, too fast', 'Low notes want a big, slow, warm air column. Think "OH" inside the mouth.'], ['A tiny leak', 'Low notes expose every leak. Re-seat the right-hand fingers and press the pinky keys fully.']]],
+    ['Low notes shake or wobble', [['Too much lower lip rolled over the teeth', 'Roll less lip in: a thin cushion is enough.'], ['Unsteady air', 'Blow from the belly; practise 8-count long tones with the drone.']]],
+    ['Everything sounds sharp', [['Biting', 'Relax the jaw; let the lower lip be a cushion, not a clamp.'], ['Mouthpiece too shallow in the mouth', 'Take a little more mouthpiece.'], ['Mouthpiece pushed too far onto the neck', 'Pull the mouthpiece out a millimetre or two, then re-check with the tuner after warming up.']]],
+    ['Everything sounds flat', [['Mouth loose or open', 'Firm the corners and close the lips more tightly around the mouthpiece.'], ['Cold instrument', 'Warm up for 3–5 minutes before judging the tuning.'], ['Mouthpiece too far out', 'Push the mouthpiece further onto the neck.']]],
+    ['Gurgling, watery sound', [['Moisture in the body, mouthpiece or reed', 'Swab the body, dry the mouthpiece and reed with a soft cloth. If a high note refuses, blow moisture out of the branch pipe while pressing the octave lever.']]],
+    ['Fingers or hands hurt', [['Gripping too hard', 'The right thumb under the hook carries the weight; the fingers only cover. Shake the hands out between exercises.'], ['Reaching with fingertips', 'Use the pads: a relaxed, slightly curved hand covers the holes with far less effort.']]],
+    ['Lip sore or tired', [['New muscles', 'Normal for the first two weeks. Keep sessions short (10 minutes twice a day beats 25 minutes once) and stop when the sound gets airy.'], ['Teeth cutting the lower lip', 'Roll a little less lip in and stop biting; the cushion should feel soft.']]]
+  ];
+  $('#tsChips').innerHTML = TS.map((t, i) => `<button class="chip" data-i="${i}">${t[0]}</button>`).join('');
+  const showTs = i => { $$('#tsChips .chip').forEach((c, j) => c.classList.toggle('on', j === i)); $('#tsOut').innerHTML = TS[i][1].map(x => `<div class="ts-item"><b>${x[0]}</b>${x[1]}</div>`).join(''); };
+  $$('#tsChips .chip').forEach(c => c.addEventListener('click', () => showTs(+c.dataset.i)));
+  showTs(0);
+  $('#videoList').innerHTML = VIDEO_IDS.map((id, i) => `<li><a href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.2a2.6 2.6 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.6 2.6 0 0 0 2.4 7.2 27 27 0 0 0 2 12a27 27 0 0 0 .4 4.8 2.6 2.6 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.6 2.6 0 0 0 1.8-1.8A27 27 0 0 0 22 12a27 27 0 0 0-.4-4.8zM10 15V9l5.2 3L10 15z"/></svg>${VIDEO_TITLES[i]}</a></li>`).join('');
+  const rb = [['Whole note', 4], ['Half note', 2], ['Quarter note', 1], ['Eighth note', .5]];
+  $('#rhythmBars').innerHTML = rb.map(r => `<div class="row" style="margin:6px 0;flex-wrap:nowrap"><span style="width:92px;font-size:13px;flex:none">${r[0]}</span><span class="tile" style="height:30px;width:${r[1] * 23}%;${noteTileStyle('G4', themeName())};font-size:13px;font-family:var(--font-body);font-weight:700">${r[1]} beat${r[1] === 1 ? '' : 's'}</span></div>`).join('');
+  renderBasics('C4');
+}
+function renderBasics(id){
+  $('#basicsPiano').innerHTML = pianoSVG(id, themeName());
+  $('#basicsStaff').innerHTML = staffSVG(id) + `<div class="row" style="margin-top:6px"><span class="muted small">${NOTES[id].label}: ${fingeringText(fingeringFor(id, App.system))}</span></div>`;
+  $$('#basicsPiano [data-note]').forEach(k => k.addEventListener('click', () => { playNote(k.dataset.note, 0.8); renderBasics(k.dataset.note); }));
+}
+
+/* ---------- metronome ---------- */
+const Metro = { bpm: 72, beats: 4, running: false, next: 0, count: 0, id: 0, flashes: [], raf: 0,
+  start(){ const c = AudioEngine.ensure(); if (!c) { toast('Audio is not available in this browser'); return; } this.next = c.currentTime + 0.1; this.count = 0; this.flashes = []; this.running = true; this.sched(); this.id = setInterval(() => this.sched(), 25); this.vis(); $('#metroBtn').textContent = 'Stop metronome'; updateAwake(); },
+  stop(){ this.running = false; clearInterval(this.id); cancelAnimationFrame(this.raf); $$('#metroDots i').forEach(i => i.classList.remove('on')); $('#metroBtn').textContent = 'Start metronome'; updateAwake(); },
+  sched(){ const c = AudioEngine.context; if (!c) return; while (this.next < c.currentTime + 0.15) { const b = this.count % this.beats; AudioEngine.click(this.next, b === 0); this.flashes.push({ t: this.next, b }); this.count++; this.next += 60 / this.bpm; } if (this.flashes.length > 32) this.flashes.splice(0, this.flashes.length - 32); },
+  vis(){ const c = AudioEngine.context; const now = c.currentTime; let cur = null; for (const f of this.flashes) if (f.t <= now) cur = f; const dots = $$('#metroDots i'); dots.forEach((d, i) => d.classList.toggle('on', !!cur && cur.b === i && now - cur.t < 0.12)); if (this.running) this.raf = requestAnimationFrame(() => this.vis()); },
+  renderDots(){ $('#metroDots').innerHTML = Array.from({ length: this.beats }, (_, i) => `<i class="${i === 0 ? 'acc' : ''}"></i>`).join(''); }
+};
+Metro.renderDots();
+$('#metroBtn').addEventListener('click', () => Metro.running ? Metro.stop() : Metro.start());
+$('#metroBpm').addEventListener('input', e => { Metro.bpm = +e.target.value; $('#metroBpmVal').textContent = Metro.bpm; });
+$$('input[name=metroBeats]').forEach(r => r.addEventListener('change', e => { Metro.beats = +e.target.value; Metro.renderDots(); }));
+
+/* ---------- NOTES ---------- */
+function renderNotes(){
+  const ids = App.showSharps ? NOTE_IDS : NATURAL_IDS;
+  $('#showSharps').checked = App.showSharps; $('#systemSel').value = App.system;
+  $('#noteGrid').innerHTML = ids.map(id => { const f = FINGERINGS[id]; return tile(id, id === App.sel ? 'sel' : '', (f.sure ? '' : '~') + f.week); }).join('');
+  $$('#noteGrid .tile').forEach(t => t.addEventListener('click', () => { App.sel = t.dataset.note; playNote(App.sel); renderNotes(); }));
+  const id = App.sel, n = NOTES[id], f = FINGERINGS[id], fg = fingeringFor(id, App.system);
+  $('#noteDetail').innerHTML = `
+    <div class="row between">
+      <div class="big-note">${n.name}<span class="oct">${n.oct}</span>${n.altName ? `<span class="oct">= ${n.altName}${n.oct}</span>` : ''}</div>
+      <div class="row"><span class="badge w${f.week}">week ${f.week}</span>${f.sure ? '' : '<span class="badge approx">approx.</span>'}</div>
+    </div>
+    <div class="note-detail" style="margin-top:10px">
+      <div>${fingeringSVG(fg)}</div>
+      <div>
+        <button class="btn" id="playSel" style="margin-bottom:10px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l14 8-14 8z"/></svg>Hear ${n.label}</button>
+        <div class="finger-text"><b style="color:var(--ink)">Fingers:</b> ${fingeringText(fg)}</div>
+        <p style="margin-top:10px">${esc(f.tip)}</p>
+        ${f.alt ? `<p class="small muted">Alternative: ${fingeringText(f.alt)}.</p>` : ''}
+        ${f.baroque ? `<p class="small muted">${App.system === 'german' ? 'Baroque system (adaptor removed): ' + fingeringText(f.baroque) : 'German system (adaptor in): ' + fingeringText(f.main)}.</p>` : ''}
+        <p class="small muted">${noteFreq(id, App.a4).toFixed(1)} Hz at A4 = ${App.a4}</p>
+      </div>
+    </div>
+    <div class="grid-2" style="margin-top:12px;align-items:center">
+      <div>${staffSVG(id)}</div>
+      <div>${pianoSVG(id, themeName())}</div>
+    </div>
+    <div class="legend"><span><i class="c"></i>covered</span><span><i></i>open</span><span><i class="h"></i>half</span><span><i class="k"></i>key pressed</span><span><i class="o8"></i>octave lever</span></div>`;
+  $('#playSel').addEventListener('click', () => playNote(id, 1.4));
+  $$('#noteDetail .piano [data-note]').forEach(k => k.addEventListener('click', () => { App.sel = k.dataset.note; if (NOTES[App.sel].sharp && !App.showSharps) { App.showSharps = true; savePrefs(); } playNote(App.sel); renderNotes(); }));
+}
+$('#showSharps').addEventListener('change', e => { App.showSharps = e.target.checked; savePrefs(); renderNotes(); });
+$('#systemSel').addEventListener('change', e => { App.system = e.target.value; savePrefs(); renderNotes(); });
+
+/* ---------- SONGS ---------- */
+const Player = { song: null, bpm: 72, loop: false, countIn: true, clicks: false, playing: false, startAt: 0, endAt: 0, timeline: [], raf: 0, spb: 1, curIdx: -1, voices: [] };
+function renderSongList(){
+  const filters = [['all', 'All'], ['1', 'Week 1'], ['2', 'Week 2'], ['3', 'Week 3'], ['4', 'Week 4'], ['ex', 'Exercises']];
+  $('#songFilters').innerHTML = filters.map(f => `<button class="chip${App.filter === f[0] ? ' on' : ''}" data-f="${f[0]}">${f[1]}</button>`).join('');
+  $$('#songFilters .chip').forEach(c => c.addEventListener('click', () => { App.filter = c.dataset.f; renderSongList(); }));
+  const list = SONGS.filter(s => App.filter === 'all' ? true : App.filter === 'ex' ? s.exercise : (String(s.week) === App.filter));
+  $('#songList').innerHTML = list.map(s => `<button class="song-item" data-id="${s.id}"><span class="badge w${s.week}">W${s.week}</span><span><span class="t">${esc(s.title)}</span><br><span class="m">${esc(s.origin)} · ${esc(s.range)} · ${s.beats}/4 · ${s.bpm} BPM</span></span><svg class="go" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg></button>`).join('');
+  $$('#songList .song-item').forEach(b => b.addEventListener('click', () => openSong(b.dataset.id)));
+}
+function openSong(id, bpm){
+  stopPlayer();
+  Player.song = SONG_BY_ID[id]; Player.bpm = bpm || Player.song.bpm; Player.curIdx = -1;
+  renderPlayer(); const pc = $('#playerCard'); pc.hidden = false; show('songs'); pc.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function stripHTML(s, idPrefix){
+  let strip = '', beatAcc = 0; const barLen = s.barLen || s.beats, pickup = s.pickup || 0;
+  s.notes.forEach((nt, i) => {
+    if (i > 0 && beatAcc >= pickup && Math.abs((beatAcc - pickup) % barLen) < 1e-6) strip += '<span class="bar"></span>';
+    const w = Math.max(34, Math.round(nt[1] * 44));
+    if (nt[0] === 'r') strip += `<span class="tile rest" data-i="${i}" style="width:${w}px">rest</span>`;
+    else { const n = NOTES[nt[0]]; strip += `<span class="tile" data-i="${i}" style="width:${w}px;${noteTileStyle(nt[0], themeName())}">${n.name}<span class="oct">${n.oct}</span></span>`; }
+    beatAcc += nt[1];
+  });
+  return strip;
+}
+function renderPlayer(){
+  const s = Player.song; if (!s) return;
+  const first = s.notes.find(n => n[0] !== 'r');
+  $('#playerCard').innerHTML = `
+    <div class="row between"><div><span class="badge w${s.week}">Week ${s.week}</span> <h2 style="display:inline;margin-left:6px">${esc(s.title)}</h2></div><button class="btn sm quiet" id="closePlayer">Close</button></div>
+    <p class="small muted" style="margin:4px 0 0">${esc(s.origin)} · ${esc(s.range)} · ${s.beats}/4</p>
+    <div class="strip" id="strip">${stripHTML(s)}</div>
+    <div class="player-fg">
+      <div class="fg-box"><div class="cap" id="curCap">now: ${first ? NOTES[first[0]].label : ''}</div><div id="curFg">${first ? fingeringSVG(fingeringFor(first[0], App.system)) : ''}</div></div>
+      <div class="fg-box next"><div class="cap" id="nextCap">next</div><div id="nextFg"></div></div>
+    </div>
+    <div class="tempo" style="margin-top:12px"><input type="range" id="tempo" min="40" max="150" value="${Player.bpm}" aria-label="Tempo"><b><span id="tempoVal">${Player.bpm}</span> BPM</b></div>
+    <div class="row" style="margin-top:6px">
+      <label class="toggle"><input type="checkbox" id="optCount" ${Player.countIn ? 'checked' : ''}> count-in</label>
+      <label class="toggle"><input type="checkbox" id="optLoop" ${Player.loop ? 'checked' : ''}> loop</label>
+      <label class="toggle"><input type="checkbox" id="optClick" ${Player.clicks ? 'checked' : ''}> click track</label>
+    </div>
+    <div class="row" style="margin-top:12px;align-items:center">
+      <button class="btn" id="playBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l14 8-14 8z"/></svg>Play along</button>
+      <button class="btn ghost" id="slowBtn">Slower (−10)</button>
+      <button class="btn ghost" id="byEarBtn">Note by note</button>
+      <span class="countin" id="countIn" hidden>4</span>
+    </div>
+    <div class="callout" style="margin-top:12px"><b>Coach:</b> ${esc(s.tip)}</div>
+    <details><summary class="small muted" style="cursor:pointer">Fingering list for this song</summary><p class="small" style="margin-top:8px">${uniqueNotes(s).map(id => `<b>${NOTES[id].label}</b>: ${fingeringText(fingeringFor(id, App.system))}`).join('<br>')}</p></details>`;
+  $('#closePlayer').addEventListener('click', () => { stopPlayer(); $('#playerCard').hidden = true; });
+  $('#tempo').addEventListener('input', e => { Player.bpm = +e.target.value; $('#tempoVal').textContent = Player.bpm; if (Player.playing) stopPlayer(); });
+  $('#optCount').addEventListener('change', e => Player.countIn = e.target.checked);
+  $('#optLoop').addEventListener('change', e => Player.loop = e.target.checked);
+  $('#optClick').addEventListener('change', e => Player.clicks = e.target.checked);
+  $('#playBtn').addEventListener('click', () => Player.playing ? stopPlayer() : startPlayer());
+  $('#slowBtn').addEventListener('click', () => { Player.bpm = Math.max(40, Player.bpm - 10); $('#tempo').value = Player.bpm; $('#tempoVal').textContent = Player.bpm; if (Player.playing) stopPlayer(); });
+  $('#byEarBtn').addEventListener('click', () => { stopPlayer(); show('tuner'); LT.setMode('song'); $('#ltSongSel').value = s.id; LT.loadSong(); });
+  $$('#strip .tile').forEach(t => t.addEventListener('click', () => { const nt = s.notes[+t.dataset.i]; if (nt[0] !== 'r') { playNote(nt[0], 0.8); setCurrent(+t.dataset.i, true); } }));
+  const firstIdx = s.notes.findIndex(n => n[0] !== 'r'); if (firstIdx >= 0) { setCurrent(firstIdx, true, true); const st = $('#strip'); if (st) st.scrollLeft = 0; }
+}
+function uniqueNotes(s){ const seen = []; s.notes.forEach(n => { if (n[0] !== 'r' && !seen.includes(n[0])) seen.push(n[0]); }); return seen.sort((a, b) => NOTES[a].midi - NOTES[b].midi); }
+function setCurrent(i, manual, noScroll){
+  const s = Player.song; if (!s) return; if (i === Player.curIdx && !manual) return; Player.curIdx = i;
+  $$('#strip .tile').forEach(t => t.classList.toggle('cur', +t.dataset.i === i));
+  if (!noScroll) { const t = $(`#strip .tile[data-i="${i}"]`); if (t && t.scrollIntoView) t.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' }); }
+  const nt = s.notes[i]; if (!nt) return;
+  if (nt[0] !== 'r') { $('#curCap').textContent = 'now: ' + NOTES[nt[0]].label; $('#curFg').innerHTML = fingeringSVG(fingeringFor(nt[0], App.system)); }
+  else { $('#curCap').textContent = 'rest: breathe'; }
+  let j = i + 1; while (j < s.notes.length && s.notes[j][0] === 'r') j++;
+  if (j < s.notes.length) { $('#nextCap').textContent = 'next: ' + NOTES[s.notes[j][0]].label; $('#nextFg').innerHTML = fingeringSVG(fingeringFor(s.notes[j][0], App.system)); }
+  else { $('#nextCap').textContent = 'last note'; $('#nextFg').innerHTML = ''; }
+}
+function startPlayer(){
+  const c = AudioEngine.ensure(); if (!c) { toast('Audio is not available in this browser'); return; }
+  const s = Player.song; const spb = 60 / Player.bpm; Player.spb = spb;
+  let t = c.currentTime + 0.12; Player.countStart = t; Player.voices = [];
+  const keep = v => { if (v) Player.voices.push(v); };
+  if (Player.countIn) { for (let i = 0; i < s.beats; i++) keep(AudioEngine.click(t + i * spb, i === 0)); t += s.beats * spb; }
+  Player.startAt = t; Player.timeline = [];
+  s.notes.forEach((nt, i) => { const dur = nt[1] * spb; if (nt[0] !== 'r') keep(AudioEngine.tone(noteFreq(nt[0], App.a4), t, Math.max(0.12, dur - 0.05))); Player.timeline.push({ i, start: t, end: t + dur }); t += dur; });
+  if (Player.clicks) { const total = songDurationBeats(s); for (let b = 0; b < total; b++) keep(AudioEngine.click(Player.startAt + b * spb, b % s.beats === 0)); }
+  Player.endAt = t; Player.playing = true; Player.curIdx = -1;
+  $('#playBtn').innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>Stop';
+  updateAwake(); tickPlayer();
+}
+function tickPlayer(){
+  const c = AudioEngine.context; if (!c || !Player.playing) return;
+  const now = c.currentTime; const ci = $('#countIn');
+  if (now < Player.startAt) { if (ci) { ci.hidden = false; ci.textContent = Math.min(Player.song.beats, Math.floor((now - Player.countStart) / Player.spb) + 1); } }
+  else {
+    if (ci) ci.hidden = true;
+    const tl = Player.timeline; let idx = -1; for (let k = 0; k < tl.length; k++) { if (now >= tl[k].start && now < tl[k].end) { idx = k; break; } }
+    if (idx >= 0) setCurrent(idx);
+    if (now >= Player.endAt) { if (Player.loop) { Player.playing = false; startPlayer(); return; } stopPlayer(); return; }
+  }
+  Player.raf = requestAnimationFrame(tickPlayer);
+}
+function stopPlayer(){ cancelAnimationFrame(Player.raf); Player.voices.forEach(v => v.stop()); Player.voices = []; Player.playing = false; const b = $('#playBtn'); if (b) b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l14 8-14 8z"/></svg>Play along'; const ci = $('#countIn'); if (ci) ci.hidden = true; updateAwake(); }
+
+/* echo game */
+const Echo = { set: 'w1', pattern: [], sets: { w1: ['G4','A4','B4'], w1b: ['G4','A4','B4','C5','D5'], w2: ['C4','D4','E4','F4','G4'], w2b: ['C4','D4','E4','F4','G4','A4','B4','C5'], w4: ['E5','F5','G5','A5','B5','C6'] }, names: { w1: 'G A B', w1b: 'G to D', w2: 'C to G', w2b: 'C to C', w4: 'high notes' } };
+function renderEcho(){ $('#echoLevels').innerHTML = Object.keys(Echo.sets).map(k => `<button class="chip${Echo.set === k ? ' on' : ''}" data-k="${k}">${Echo.names[k]}</button>`).join(''); $$('#echoLevels .chip').forEach(c => c.addEventListener('click', () => { Echo.set = c.dataset.k; renderEcho(); })); }
+$('#echoPlay').addEventListener('click', () => {
+  const c = AudioEngine.ensure(); if (!c) { toast('Audio is not available in this browser'); return; }
+  const pool = Echo.sets[Echo.set]; let p; do { p = [0, 1, 2].map(() => pool[Math.floor(Math.random() * pool.length)]); } while (p[0] === p[1] && p[1] === p[2]);
+  Echo.pattern = p; const t0 = c.currentTime + 0.1; p.forEach((id, i) => AudioEngine.tone(noteFreq(id, App.a4), t0 + i * 0.65, 0.55));
+  $('#echoOut').innerHTML = '<p class="muted">Now play it back on your Venova. Then reveal.</p>'; $('#echoReveal').disabled = false;
+});
+$('#echoReveal').addEventListener('click', () => { $('#echoOut').innerHTML = `<div class="row">${Echo.pattern.map(id => tile(id, '', '')).join('')}</div><div class="player-fg" style="grid-template-columns:repeat(3,1fr);margin-top:10px">${Echo.pattern.map(id => `<div class="fg-box"><div class="cap">${NOTES[id].label}</div>${fingeringSVG(fingeringFor(id, App.system))}</div>`).join('')}</div>`; $$('#echoOut .tile').forEach(t => { t.style.height = '48px'; t.style.width = '64px'; t.style.fontSize = '20px'; }); });
+
+/* ---------- TUNER: live microphone ---------- */
+const LT = { mode: 'tuner', ctx: null, analyser: null, buf: null, stream: null, raf: 0, hist: [], last: null, lastSeen: 0, level: 'G A B', target: null, hits: 0, holdSince: 0, song: null, idx: 0, songHoldSince: 0, restSince: 0, songStart: 0,
+  LEVELS: { 'G A B': ['G4','A4','B4'], 'G to D': ['G4','A4','B4','C5','D5'], 'C to G': ['C4','D4','E4','F4','G4'], 'C to C': ['C4','D4','E4','F4','G4','A4','B4','C5'], 'high notes': ['E5','F5','G5','A5','B5','C6'], 'everything': NATURAL_IDS },
+  setMode(m){ this.mode = m; $$('#ltModes .chip').forEach(x => x.classList.toggle('on', x.dataset.m === m)); $('#ltTunerPane').classList.toggle('hidden', m !== 'tuner'); $('#ltTrainerPane').classList.toggle('hidden', m !== 'trainer'); $('#ltSongPane').classList.toggle('hidden', m !== 'song'); if (m === 'trainer' && !this.target) this.newTarget(); if (m === 'song' && !this.song) this.loadSong(); },
+  async start(){
+    if (this.stream) { this.stop(); return; }
+    try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error('nomedia');
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false }, video: false });
+      const ctx = AudioEngine.ensure(); this.ctx = ctx; this.stream = stream;
+      const src = ctx.createMediaStreamSource(stream); const an = ctx.createAnalyser(); an.fftSize = 2048; an.smoothingTimeConstant = 0; src.connect(an);
+      this.analyser = an; this.buf = new Float32Array(an.fftSize);
+      $('#ltStart').innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>Stop listening';
+      $('#ltState').textContent = 'listening'; $('#ltState').className = 'state'; $('#ltCents').textContent = 'play a note';
+      updateAwake(); this.loop();
+    } catch (e) {
+      const st = $('#ltState'); st.className = 'state bad';
+      if (App.inFrame) { st.textContent = 'no microphone inside Claude: open the app\'s own link in Safari'; $('#ltHelp').textContent = 'Inside Claude the page runs in a frame that cannot use the microphone. Open the app from its own web address and it works.'; }
+      else if (e && (e.name === 'NotAllowedError' || e.name === 'SecurityError')) { st.textContent = 'microphone blocked: allow it in Settings → Safari → Microphone, then try again'; }
+      else st.textContent = 'no microphone available here';
+    }
+  },
+  stop(){ cancelAnimationFrame(this.raf); if (this.stream) this.stream.getTracks().forEach(t => t.stop()); this.stream = null; this.hist = []; $('#ltStart').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>Start listening'; $('#ltState').textContent = 'microphone off'; $('#ltState').className = 'state'; updateAwake(); },
+  loop(){
+    this.raf = requestAnimationFrame(() => this.loop());
+    if (!this.analyser || !this.stream) return;
+    this.analyser.getFloatTimeDomainData(this.buf);
+    const r = detectPitch(this.buf, this.ctx.sampleRate, { minRms: 0.006, minClarity: 0.86, fMin: 120, fMax: 1600 });
+    const now = performance.now();
+    if (r) { this.hist.push(r.freq); if (this.hist.length > 5) this.hist.shift(); this.lastSeen = now; }
+    else if (now - this.lastSeen > 350) this.hist = [];
+    if (!this.hist.length) { if (now - this.lastSeen > 350) this.idle(); return; }
+    const sorted = this.hist.slice().sort((a, b) => a - b); const f = sorted[Math.floor(sorted.length / 2)];
+    const m = freqToMidi(f, App.a4); const nearest = Math.round(m); const cents = (m - nearest) * 100;
+    this.render(f, nearest, cents);
+    if (this.mode === 'trainer') this.trainerStep(nearest, cents);
+    if (this.mode === 'song') this.songStep(nearest, cents);
+  },
+  idle(){ $('#ltNeedle').style.transform = 'rotate(0deg)'; $('#ltCents').textContent = 'play a note'; const st = $('#ltState'); if (st.className.indexOf('bad') < 0) { st.textContent = 'listening'; st.className = 'state'; } $('#ltHold').style.width = '0%'; $('#ltSongHold').style.width = '0%'; },
+  render(f, nearest, cents){
+    const ang = Math.max(-50, Math.min(50, cents)) * 1.8; $('#ltNeedle').style.transform = `rotate(${ang}deg)`;
+    const name = midiName(nearest); const mm = /^(.+?)(\d)$/.exec(name);
+    $('#ltNote').innerHTML = `${mm[1]}<small>${mm[2]}</small>`;
+    $('#ltCents').textContent = (cents > 0 ? '+' : '') + cents.toFixed(0) + ' ¢';
+    const a = Math.abs(cents); const st = $('#ltState'); st.textContent = a <= 8 ? 'in tune' : cents < 0 ? (a <= 25 ? 'a little flat' : 'flat') : (a <= 25 ? 'a little sharp' : 'sharp'); st.className = 'state ' + (a <= 8 ? 'good' : a <= 25 ? 'warn' : 'bad');
+    $('#ltHz').textContent = f.toFixed(1) + ' Hz';
+    const id = midiToId(nearest);
+    if (NOTES[id]) { if (this.last !== id) { $('#ltFg').innerHTML = fingeringSVG(fingeringFor(id, App.system)); $('#ltTxt').innerHTML = `<b>${NOTES[id].label}</b><br>${fingeringText(fingeringFor(id, App.system))}<br><span class="muted">${esc(FINGERINGS[id].tip)}</span>`; } }
+    else { $('#ltFg').innerHTML = ''; $('#ltTxt').textContent = name + ' is outside the Venova\'s range (C4 to C6).'; }
+    this.last = id;
+    const heard = `${name} ${cents > 0 ? '+' : ''}${cents.toFixed(0)} ¢`; $('#ltHeard').textContent = 'hearing: ' + heard; $('#ltSongHeard').textContent = 'hearing: ' + heard;
+  },
+  renderLevels(){ $('#ltLevels').innerHTML = Object.keys(this.LEVELS).map(k => `<button class="chip${k === this.level ? ' on' : ''}" data-k="${k}">${k}</button>`).join(''); $$('#ltLevels .chip').forEach(c => c.addEventListener('click', () => { this.level = c.dataset.k; this.renderLevels(); this.newTarget(); })); },
+  newTarget(){ const pool = this.LEVELS[this.level]; let t; do { t = pool[Math.floor(Math.random() * pool.length)]; } while (t === this.target && pool.length > 1); this.target = t; this.holdSince = 0; $('#ltTargetTile').innerHTML = tile(t); const tt = $('#ltTargetTile .tile'); tt.style.height = '64px'; tt.style.width = '90px'; tt.style.fontSize = '30px'; $('#ltTargetFg').innerHTML = fingeringSVG(fingeringFor(t, App.system)); $('#ltTarget').classList.remove('hit'); $('#ltHold').style.width = '0%'; },
+  trainerStep(nearest, cents){
+    if (!this.target) return; const ok = nearest === NOTES[this.target].midi && Math.abs(cents) <= 15; const now = performance.now();
+    if (ok) { if (!this.holdSince) this.holdSince = now; const p = Math.min(1, (now - this.holdSince) / 700); $('#ltHold').style.width = (p * 100) + '%'; if (p >= 1) { this.hits++; $('#ltScore').textContent = this.hits + (this.hits === 1 ? ' hit' : ' hits'); $('#ltTarget').classList.add('hit'); AudioEngine.chime(); this.holdSince = 0; const tgt = this.target; this.target = null; setTimeout(() => { if (!this.target) this.newTarget(); }, 700); } }
+    else { this.holdSince = 0; $('#ltHold').style.width = '0%'; }
+  },
+  loadSong(){ this.song = SONG_BY_ID[$('#ltSongSel').value]; this.idx = -1; this.songStart = performance.now(); $('#ltSongDone').textContent = ''; $('#ltStrip').innerHTML = stripHTML(this.song); this.advance(); },
+  advance(){
+    const s = this.song; if (!s) return; this.idx++; this.songHoldSince = 0; this.restSince = 0; $('#ltSongHold').style.width = '0%';
+    $$('#ltStrip .tile').forEach(t => { const i = +t.dataset.i; t.classList.toggle('cur', i === this.idx); t.classList.toggle('done', i < this.idx); });
+    if (this.idx >= s.notes.length) { $('#ltSongNow').textContent = 'Done'; $('#ltSongNext').textContent = ''; $('#ltSongFg').innerHTML = ''; $('#ltSongDone').innerHTML = `<b>Finished in ${((performance.now() - this.songStart) / 1000).toFixed(0)} s.</b> Restart to try it smoother.`; AudioEngine.chime(); return; }
+    const cur = $(`#ltStrip .tile[data-i="${this.idx}"]`); if (cur && cur.scrollIntoView && this.idx > 0) cur.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+    const n = s.notes[this.idx];
+    if (n[0] === 'r') { $('#ltSongNow').textContent = 'rest'; $('#ltSongFg').innerHTML = ''; this.restSince = performance.now(); }
+    else { $('#ltSongNow').textContent = NOTES[n[0]].label; $('#ltSongFg').innerHTML = fingeringSVG(fingeringFor(n[0], App.system)); }
+    let j = this.idx + 1; while (j < s.notes.length && s.notes[j][0] === 'r') j++;
+    $('#ltSongNext').textContent = j < s.notes.length ? NOTES[s.notes[j][0]].label : 'end';
+  },
+  songStep(nearest, cents){
+    const s = this.song; if (!s || this.idx >= s.notes.length) return; const n = s.notes[this.idx]; const now = performance.now();
+    if (n[0] === 'r') { if (now - this.restSince > 600) this.advance(); return; }
+    const ok = nearest === NOTES[n[0]].midi && Math.abs(cents) <= 20;
+    if (ok) { if (!this.songHoldSince) this.songHoldSince = now; const p = Math.min(1, (now - this.songHoldSince) / 300); $('#ltSongHold').style.width = (p * 100) + '%'; if (p >= 1) this.advance(); }
+    else { this.songHoldSince = 0; $('#ltSongHold').style.width = '0%'; }
+  }
+};
+$('#ltStart').addEventListener('click', () => LT.start());
+$$('#ltModes .chip').forEach(c => c.addEventListener('click', () => LT.setMode(c.dataset.m)));
+$('#ltSkip').addEventListener('click', () => LT.newTarget());
+$('#ltHear').addEventListener('click', () => { if (LT.target) playNote(LT.target, 1); });
+$('#ltSongSel').innerHTML = SONGS.filter(s => !s.exercise).map(s => `<option value="${s.id}">${esc(s.title)}</option>`).join('');
+$('#ltSongSel').addEventListener('change', () => LT.loadSong());
+$('#ltSongRestart').addEventListener('click', () => LT.loadSong());
+$('#ltSongSkip').addEventListener('click', () => LT.advance());
+setInterval(() => { if (LT.mode === 'song' && LT.song && LT.idx < LT.song.notes.length && LT.song.notes[LT.idx][0] === 'r' && performance.now() - LT.restSince > 600) LT.advance(); }, 200);
+LT.renderLevels();
+$('#ltFg').innerHTML = fingeringSVG(fingeringFor('G4', 'german'));
+
+/* drones */
+let drone = null, droneId = null;
+function renderDronePad(){ $('#dronePad').innerHTML = NATURAL_IDS.map(id => tile(id, id === droneId ? 'on' : '')).join(''); $$('#dronePad .tile').forEach(t => t.addEventListener('click', () => toggleDrone(t.dataset.note))); }
+function toggleDrone(id){
+  if (drone) { drone.stop(); drone = null; }
+  if (droneId === id) { droneId = null; renderDronePad(); $('#droneFg').innerHTML = 'No drone playing.'; return; }
+  const c = AudioEngine.ensure(); if (!c) { toast('Audio is not available in this browser'); return; }
+  droneId = id; drone = AudioEngine.tone(noteFreq(id, App.a4), null, 600, { vol: 0.3, vibrato: false });
+  renderDronePad();
+  $('#droneFg').innerHTML = `<div class="row" style="flex-wrap:nowrap;align-items:center"><div style="width:90px">${fingeringSVG(fingeringFor(id, App.system))}</div><div><b>${NOTES[id].label}</b> · ${noteFreq(id, App.a4).toFixed(1)} Hz<br><span class="muted small">${fingeringText(fingeringFor(id, App.system))}</span></div></div>`;
+}
+$('#a4Input').addEventListener('change', e => { const v = Math.min(450, Math.max(430, +e.target.value || 440)); App.a4 = v; e.target.value = v; savePrefs(); if (droneId) { const id = droneId; droneId = null; toggleDrone(id); } toast('A4 set to ' + v + ' Hz'); });
+
+/* recording analysis */
+$('#recFile').addEventListener('change', async e => {
+  const file = e.target.files && e.target.files[0]; if (!file) return;
+  $('#recName').textContent = file.name; $('#recStats').innerHTML = '<p class="muted small">Listening…</p>';
+  try {
+    const c = AudioEngine.ensure(); const ab = await file.arrayBuffer();
+    const audio = await new Promise((res, rej) => { const p = c.decodeAudioData(ab, res, rej); if (p && p.then) p.then(res, rej); });
+    let data = audio.getChannelData(0); const maxS = 60 * audio.sampleRate; if (data.length > maxS) data = data.subarray(0, maxS);
+    const frames = analyseBuffer(data, audio.sampleRate, App.a4);
+    drawPitch(frames, data.length / audio.sampleRate); reportPitch(frames);
+  } catch (err) { $('#recStats').innerHTML = '<p class="muted">This file could not be decoded here. Try a .m4a, .mp3 or .wav recording.</p>'; }
+  e.target.value = '';
+});
+function drawPitch(frames, dur){
+  const cv = $('#pitchCanvas'); const dpr = window.devicePixelRatio || 1; const W = cv.clientWidth, H = 230; cv.width = W * dpr; cv.height = H * dpr;
+  const g = cv.getContext('2d'); g.scale(dpr, dpr); g.clearRect(0, 0, W, H);
+  const css = getComputedStyle(document.documentElement); const muted = css.getPropertyValue('--muted').trim(), line = css.getPropertyValue('--line').trim();
+  const lo = 58, hi = 86, padL = 34, padR = 8, padT = 8, padB = 18;
+  const y = m => padT + (hi - m) / (hi - lo) * (H - padT - padB), x = t => padL + t / dur * (W - padL - padR);
+  g.font = '11px ' + css.getPropertyValue('--font-body'); g.textBaseline = 'middle';
+  for (let m = lo; m <= hi; m++) { const nat = [0,2,4,5,7,9,11].includes(m % 12); g.strokeStyle = line; g.lineWidth = nat ? 1 : 0.5; g.globalAlpha = nat ? 1 : 0.5; g.beginPath(); g.moveTo(padL, y(m)); g.lineTo(W - padR, y(m)); g.stroke(); g.globalAlpha = 1; if (nat && m >= 60 && m <= 84) { g.fillStyle = muted; g.fillText(midiName(m), 4, y(m)); } }
+  g.fillStyle = muted; g.textBaseline = 'alphabetic'; g.fillText('0 s', padL, H - 4); g.textAlign = 'right'; g.fillText(dur.toFixed(1) + ' s', W - padR, H - 4); g.textAlign = 'left';
+  let prev = null;
+  frames.forEach(f => { if (f.midi == null) { prev = null; return; } const cents = (f.midi - Math.round(f.midi)) * 100; const col = Math.abs(cents) <= 10 ? css.getPropertyValue('--good').trim() : Math.abs(cents) <= 25 ? css.getPropertyValue('--warn').trim() : css.getPropertyValue('--bad').trim(); if (prev && Math.abs(prev.midi - f.midi) < 1) { g.strokeStyle = col; g.lineWidth = 3; g.lineCap = 'round'; g.beginPath(); g.moveTo(x(prev.t), y(prev.midi)); g.lineTo(x(f.t), y(f.midi)); g.stroke(); } else { g.fillStyle = col; g.beginPath(); g.arc(x(f.t), y(f.midi), 2, 0, Math.PI * 2); g.fill(); } prev = f; });
+}
+function reportPitch(frames){
+  const voiced = frames.filter(f => f.midi != null);
+  if (voiced.length < 5) { $('#recStats').innerHTML = '<p class="muted">No clear pitch found. Record closer to the phone, in a quiet room, holding one note for a few seconds.</p>'; return; }
+  const hist = {}; voiced.forEach(f => { const k = Math.round(f.midi); hist[k] = (hist[k] || 0) + 1; });
+  const mainMidi = +Object.keys(hist).sort((a, b) => hist[b] - hist[a])[0];
+  const onMain = voiced.filter(f => Math.round(f.midi) === mainMidi); const meanCents = onMain.reduce((a, f) => a + (f.midi - mainMidi) * 100, 0) / onMain.length;
+  const steady = Math.round(100 * voiced.filter(f => Math.abs((f.midi - Math.round(f.midi)) * 100) <= 15).length / voiced.length);
+  let best = 0, run = 0, last = null; frames.forEach(f => { const k = f.midi == null ? null : Math.round(f.midi); if (k != null && k === last && Math.abs((f.midi - k) * 100) <= 20) run++; else run = k == null ? 0 : 1; last = k; best = Math.max(best, run); });
+  const hop = frames.length > 1 ? frames[1].t - frames[0].t : 0.05; const longest = (best * hop).toFixed(1);
+  const id = midiToId(mainMidi); const known = NOTES[id];
+  let advice = Math.abs(meanCents) <= 10 ? 'In tune. Now make it longer and steadier.' : meanCents < 0 ? 'Flat: firmer corners, faster air, and if every note is flat push the mouthpiece further onto the neck.' : 'Sharp: relax the jaw, more "OH" inside the mouth, and if every note is sharp pull the mouthpiece out a little.';
+  if (steady < 60) advice += ' The pitch wobbles: slower, deeper breaths and 8-count long tones against the drone.';
+  $('#recStats').innerHTML = `<div class="stat-row"><div class="stat"><b>${midiName(mainMidi)}</b><span>note held most</span></div><div class="stat"><b>${meanCents > 0 ? '+' : ''}${meanCents.toFixed(0)} ¢</b><span>average offset</span></div><div class="stat"><b>${steady}%</b><span>within ±15 ¢</span></div></div>
+    <p class="small muted">Longest steady note: ${longest} s. Green = within 10 cents, amber = within 25, red = further out. 100 cents is one semitone.</p>
+    <div class="callout${Math.abs(meanCents) <= 10 ? ' good' : ' warn'}"><b>Coach:</b> ${advice}</div>
+    ${known ? `<div class="row" style="flex-wrap:nowrap;align-items:center;margin-top:8px"><div style="width:90px">${fingeringSVG(fingeringFor(id, App.system))}</div><div class="small muted">Fingering for ${known.label}: ${fingeringText(fingeringFor(id, App.system))}</div></div>` : ''}`;
+}
+
+/* ---------- PLAN ---------- */
+const Timer = { day: null, step: null, total: 0, endAt: 0, id: 0,
+  start(day, step, minutes){ this.stop(); AudioEngine.ensure(); this.day = day; this.step = step; this.total = minutes * 60; this.endAt = Date.now() + this.total * 1000; this.id = setInterval(() => this.tick(), 250); renderDay(); updateAwake(); },
+  stop(){ clearInterval(this.id); this.id = 0; this.day = null; this.step = null; updateAwake(); },
+  tick(){ const left = (this.endAt - Date.now()) / 1000; const el = $('#timer-' + this.step); if (el) { const b = el.querySelector('b'); if (b) b.textContent = fmtTime(left); const bar = $('#tbar-' + this.step + ' i'); if (bar) bar.style.width = (100 * (1 - left / this.total)) + '%'; }
+    if (left <= 0) { const d = this.day, s = this.step; this.stop(); AudioEngine.chime(); setStep(d, s, true); renderDay(); renderPlanHead(); toast('Step done. Nice.'); } }
+};
+function setStep(d, i, on){ const ds = dayState(d); if (ds.steps[i] === on) return; ds.steps[i] = on; if (on) logAdd({ day: d, step: i, min: PLAN[d - 1].steps[i].min }); else logRemoveStep(d, i); saveState(); }
+function renderPlan(){ if (App.selDay == null) App.selDay = nextDay(); renderPlanHead(); renderDay(); renderWeeks(); renderLog(); renderBackup(); renderSettings(); }
+function renderPlanHead(){
+  const done = daysDone(), st = streak(), mins = minutesTotal(); const r = 40, C = 2 * Math.PI * r;
+  const byDate = minutesByDate(); const today = new Date(); const cells = []; const start = new Date(today); start.setDate(today.getDate() - 83); const dow = (start.getDay() + 6) % 7; start.setDate(start.getDate() - dow);
+  for (let i = 0; i < 84 + dow; i++) { const dt = new Date(start); dt.setDate(start.getDate() + i); if (dt > today) break; const k = dateKey(dt); const m = byDate[k] || 0; cells.push(`<i class="${m >= 20 ? 'l3' : m >= 10 ? 'l2' : m > 0 ? 'l1' : ''}${k === dateKey(today) ? ' today' : ''}" title="${k}: ${m} min"></i>`); }
+  const sessions = Object.keys(byDate).length;
+  $('#planHead').innerHTML = `<div class="progress-head">
+      <svg class="ring" viewBox="0 0 96 96" role="img" aria-label="${done} of 30 days done"><circle class="bg" cx="48" cy="48" r="${r}"/><circle class="fgc" cx="48" cy="48" r="${r}" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C * (1 - done / 30)).toFixed(1)}"/><text x="48" y="46" text-anchor="middle">${done}/30</text><text x="48" y="62" text-anchor="middle" class="sub">days</text></svg>
+      <div><h2 style="margin-bottom:6px">${esc(App.profile.name)}'s 30 days</h2><div class="stats-mini"><div><b>${st}</b><span>day streak</span></div><div><b>${mins}</b><span>minutes</span></div><div><b>${sessions}</b><span>practice days</span></div></div></div>
+    </div>
+    <div class="heat"><div class="wd"><span>M</span><span></span><span>W</span><span></span><span>F</span><span></span><span>S</span></div><div class="cells">${cells.join('')}</div></div>
+    <div class="heat-cap">Last 12 weeks. Darker = more minutes that day (light under 10, medium 10–19, dark 20 and up).</div>`;
+}
+function renderDay(){
+  const d = App.selDay || nextDay(); const p = PLAN[d - 1]; const ds = dayState(d); const wk = WEEKS[Math.min(3, Math.ceil(d / 7) - 1)];
+  const allSteps = ds.steps.every(Boolean);
+  $('#dayCard').innerHTML = `
+    <div class="row between"><div class="row"><span class="badge w${Math.min(4, Math.ceil(d / 7))}">Week ${Math.min(4, Math.ceil(d / 7))} · ${esc(wk.title)}</span>${ds.done ? '<span class="badge good">done' + (ds.doneAt ? ' · ' + fmtDate(ds.doneAt) : '') + '</span>' : ''}</div><div class="row"><button class="btn sm quiet" id="prevDay" ${d === 1 ? 'disabled' : ''} aria-label="Previous day">‹</button><button class="btn sm quiet" id="nextDayBtn" ${d === 30 ? 'disabled' : ''} aria-label="Next day">›</button></div></div>
+    <h2 style="margin-top:10px;font-size:24px">Day ${d}: ${esc(p.title)}</h2>
+    <p>${esc(p.goal)}</p>
+    ${p.notes.length ? `<div class="row" style="margin:8px 0">${p.notes.map(n => tile(n, 'mini', '')).join('')}</div>` : ''}
+    <div class="day-steps">${p.steps.map((s, i) => `
+      <div class="step${ds.steps[i] ? ' done' : ''}">
+        <input type="checkbox" id="step-${d}-${i}" data-i="${i}" ${ds.steps[i] ? 'checked' : ''}>
+        <label for="step-${d}-${i}">${esc(s.t)}<br><span class="k"><b>${s.min} min</b> · ${s.kind === 'warm' ? 'warm-up' : s.kind === 'read' ? 'read / set up' : s.kind === 'care' ? 'care' : 'play'}</span></label>
+        <span class="timer" id="timer-${i}">${Timer.id && Timer.day === d && Timer.step === i ? `<b>${fmtTime((Timer.endAt - Date.now()) / 1000)}</b><button class="btn sm quiet" data-stop="${i}" type="button">Stop</button>` : `<button class="btn sm ghost" data-start="${i}" type="button">${s.min} min</button>`}</span>
+        ${Timer.id && Timer.day === d && Timer.step === i ? `<span class="tbar" id="tbar-${i}"><i style="width:${(100 * (1 - (Timer.endAt - Date.now()) / 1000 / Timer.total)).toFixed(1)}%"></i></span>` : ''}
+      </div>`).join('')}</div>
+    <div class="row">
+      ${p.songs.map(id => `<button class="chip" data-song="${id}">${SONG_BY_ID[id].exercise ? 'Exercise' : 'Play'}: ${esc(SONG_BY_ID[id].title)}</button>`).join('')}
+      ${p.lessons.map(id => `<button class="chip" data-lesson="${id}">Lesson: ${lessonTitle(id)}</button>`).join('')}
+      ${p.notes.length ? `<button class="chip" data-notes="${p.notes[0]}">Fingerings</button>` : ''}
+      ${p.steps.some(s => /drone|tuner/i.test(s.t)) ? '<button class="chip" data-tuner="1">Tuner</button>' : ''}
+    </div>
+    <div class="callout" style="margin-top:12px"><b>Coach:</b> ${esc(p.tip)}</div>
+    <label class="small muted" for="dayNote">How did it go? (one line is plenty)</label>
+    <textarea id="dayNote" placeholder="e.g. G is steady now, A squeaks when I lift the ring finger too far">${esc(ds.note || '')}</textarea>
+    <div class="row between" style="margin-top:12px">
+      <button class="btn ${ds.done ? 'quiet' : ''}" id="doneBtn">${ds.done ? 'Mark as not done' : allSteps ? 'Mark day ' + d + ' complete' : 'Complete day ' + d + ' anyway'}</button>
+      ${d !== nextDay() ? `<button class="btn ghost sm" id="backToday">Back to today</button>` : ''}
+    </div>`;
+  $$('#dayCard .step input').forEach(cb => cb.addEventListener('change', () => { setStep(d, +cb.dataset.i, cb.checked); renderDay(); renderPlanHead(); renderLog(); }));
+  $$('#dayCard [data-start]').forEach(b => b.addEventListener('click', () => Timer.start(d, +b.dataset.start, p.steps[+b.dataset.start].min)));
+  $$('#dayCard [data-stop]').forEach(b => b.addEventListener('click', () => { Timer.stop(); renderDay(); }));
+  $$('#dayCard [data-song]').forEach(b => b.addEventListener('click', () => openSong(b.dataset.song)));
+  $$('#dayCard [data-lesson]').forEach(b => b.addEventListener('click', () => openLesson(b.dataset.lesson)));
+  $$('#dayCard [data-notes]').forEach(b => b.addEventListener('click', () => { App.sel = b.dataset.notes; renderNotes(); show('notes'); }));
+  $$('#dayCard [data-tuner]').forEach(b => b.addEventListener('click', () => show('tuner')));
+  $$('#dayCard .tile').forEach(t => { t.style.height = '44px'; t.style.width = '58px'; t.style.fontSize = '18px'; t.style.cursor = 'pointer'; t.addEventListener('click', () => { playNote(t.dataset.note); App.sel = t.dataset.note; renderNotes(); }); });
+  $('#dayNote').addEventListener('change', e => { ds.note = e.target.value.slice(0, 500); saveState(); renderLog(); });
+  $('#doneBtn').addEventListener('click', () => {
+    if (ds.done) { ds.done = false; ds.doneAt = null; }
+    else { ds.done = true; ds.doneAt = todayKey(); p.steps.forEach((s, i) => { if (!ds.steps[i]) { ds.steps[i] = true; logAdd({ day: d, step: i, min: s.min }); } }); if (!App.state.startDate) App.state.startDate = todayKey(); AudioEngine.chime(); $('#dayCard').classList.add('celebrate'); setTimeout(() => $('#dayCard').classList.remove('celebrate'), 600); toast(d === 30 ? 'Thirty days. You play the Venova now.' : 'Day ' + d + ' done. See you tomorrow.'); }
+    saveState(); App.selDay = ds.done ? nextDay() : d; renderPlan(); renderToday();
+  });
+  $('#prevDay').addEventListener('click', () => { App.selDay = Math.max(1, d - 1); renderDay(); renderWeeks(); });
+  $('#nextDayBtn').addEventListener('click', () => { App.selDay = Math.min(30, d + 1); renderDay(); renderWeeks(); });
+  const bt = $('#backToday'); if (bt) bt.addEventListener('click', () => { App.selDay = nextDay(); renderDay(); renderWeeks(); });
+}
+function lessonTitle(id){ return { meet: 'Meet your Venova', assemble: 'Set up the reed', hold: 'Hold it', sound: 'First sound', breath: 'Air and tongue', basics: 'Music basics', rhythm: 'Rhythm', trouble: 'Fix my sound', care: 'Care and tuning', practice: 'How to practise' }[id] || id; }
+function renderWeeks(){
+  const nd = nextDay();
+  const chip = d => { const ds = App.state.days[d]; return `<button class="day-chip${ds && ds.done ? ' done' : ''}${d === nd && !(ds && ds.done) ? ' today' : ''}${d === App.selDay ? ' sel' : ''}" data-d="${d}" aria-label="Day ${d}: ${esc(PLAN[d - 1].title)}">${d}</button>`; };
+  $('#weeks').innerHTML = WEEKS.map(w => `<div class="week"><h3>Week ${w.n}: ${esc(w.title)}<span>${esc(w.sub)}</span></h3><div class="days">${Array.from({ length: 7 }, (_, i) => chip((w.n - 1) * 7 + i + 1)).join('')}</div></div>`).join('') + `<div class="week"><h3>Days 29–30<span>rehearsal and concert</span></h3><div class="days">${chip(29)}${chip(30)}</div></div>`;
+  $$('#weeks .day-chip').forEach(b => b.addEventListener('click', () => { App.selDay = +b.dataset.d; renderDay(); renderWeeks(); $('#dayCard').scrollIntoView({ behavior: 'smooth', block: 'start' }); }));
+}
+function renderLog(){
+  const byDate = {}; App.state.log.slice().sort((a, b) => b.ts - a.ts).forEach(e => { (byDate[e.t] = byDate[e.t] || []).push(e); });
+  const dates = Object.keys(byDate).sort().reverse().slice(0, 14);
+  $('#logCard').innerHTML = `<div class="row between"><h2>Practice log</h2><button class="btn sm ghost" id="logExtra">Add practice</button></div>
+    <p class="small muted">Every step you tick or time is logged with its minutes. "Add practice" records playing outside the plan.</p>
+    ${dates.length ? `<div class="log-list">${dates.map(k => { const items = byDate[k]; const mins = items.reduce((a, e) => a + (e.min || 0), 0); const days = Array.from(new Set(items.filter(e => e.day).map(e => e.day))); const extras = items.filter(e => !e.day); return `<div class="log-day"><div class="h">${fmtDate(k)}<span>${mins} min</span></div><ul>${days.map(dd => { const ds = App.state.days[dd] || {}; const stepsDone = items.filter(e => e.day === dd).length; return `<li>Day ${dd}: ${esc(PLAN[dd - 1].title)} · ${stepsDone} step${stepsDone === 1 ? '' : 's'}${ds.done && ds.doneAt === k ? ' · completed' : ''}${ds.note ? ' · <i>' + esc(ds.note) + '</i>' : ''}</li>`; }).join('')}${extras.map(e => `<li>Extra practice · ${e.min} min${e.note ? ' · <i>' + esc(e.note) + '</i>' : ''}</li>`).join('')}</ul></div>`; }).join('')}</div>` : '<p class="muted" style="margin-top:8px">Nothing logged yet. Tick a step in today\'s practice and it appears here.</p>'}`;
+  $('#logExtra').addEventListener('click', () => {
+    openSheet(`<h2>Add practice</h2><p class="small muted">Played outside the plan? Log it so the streak and the minutes stay honest.</p>
+      <div class="row" style="margin-top:10px"><label class="small muted">Minutes<br><input type="number" id="xMin" min="1" max="240" value="10" style="width:100px;margin-top:4px"></label></div>
+      <label class="small muted" style="display:block;margin-top:10px">What did you play? (optional)<br><input type="text" id="xNote" maxlength="120" placeholder="e.g. Ode to Joy twice, long tones" style="width:100%;margin-top:4px"></label>
+      <div class="row" style="margin-top:14px"><button class="btn" id="xSave">Log it</button><button class="btn ghost" id="xCancel">Cancel</button></div>`);
+    $('#xCancel').addEventListener('click', closeSheet);
+    $('#xSave').addEventListener('click', () => { const m = Math.max(1, Math.min(240, +$('#xMin').value || 0)); logAdd({ day: null, step: null, min: m, note: $('#xNote').value.trim().slice(0, 120) }); saveState(); closeSheet(); renderPlanHead(); renderLog(); toast(m + ' minutes logged'); });
+  });
+}
+function backupBlob(){ const data = { app: 'venova-studio', v: 2, exported: new Date().toISOString(), profile: { name: App.profile.name, color: App.profile.color }, state: App.state }; return new Blob([JSON.stringify(data)], { type: 'application/json' }); }
+function backupName(){ return 'venova-' + slug(App.profile.name) + '-' + todayKey() + '.json'; }
+function renderBackup(){
+  $('#backupCard').innerHTML = `<h2>Backup and transfer</h2>
+    <p class="small muted" id="saveStatus"></p>
+    <div class="row" style="margin-top:8px"><button class="btn" id="shareBackup">Share backup</button><label class="btn ghost file-btn">Restore from file<input type="file" id="restoreFile" accept="application/json,.json"></label><button class="btn ghost" id="copyBackup">Copy as text</button></div>
+    <p class="small muted" style="margin-top:10px">"Share backup" sends a small file through AirDrop, WhatsApp, Mail or Files. On the other phone, open the app and tap "Restore from file" to continue exactly where you left off. Do this once a week (the plan reminds you on review days).</p>
+    <div id="pasteBox" hidden style="margin-top:8px"><textarea id="pasteArea" placeholder="Paste a backup text here"></textarea><button class="btn sm" id="pasteGo" style="margin-top:6px">Load pasted backup</button></div>`;
+  renderBackupStatus();
+  $('#shareBackup').addEventListener('click', async () => {
+    const blob = backupBlob(); const name = backupName();
+    try { const file = new File([blob], name, { type: 'application/json' }); if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: 'Venova Studio backup' }); toast('Backup shared'); return; } } catch (e) { if (e && e.name === 'AbortError') return; }
+    try { const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 2000); toast('Backup file saved'); return; } catch (e) {}
+    $('#pasteBox').hidden = false; $('#pasteArea').value = JSON.stringify(JSON.parse(await blob.text())); toast('Copy the text from the box below');
+  });
+  $('#copyBackup').addEventListener('click', async () => { const txt = await backupBlob().text(); try { await navigator.clipboard.writeText(txt); toast('Backup copied as text'); } catch (e) { $('#pasteBox').hidden = false; $('#pasteArea').value = txt; toast('Copy the text from the box below'); } });
+  $('#restoreFile').addEventListener('change', async e => { const f = e.target.files && e.target.files[0]; if (!f) return; try { restoreFrom(JSON.parse(await f.text())); } catch (err) { toast('That file is not a Venova Studio backup'); } e.target.value = ''; });
+  $('#pasteGo').addEventListener('click', () => { try { restoreFrom(JSON.parse($('#pasteArea').value)); } catch (e) { toast('That text is not a Venova Studio backup'); } });
+}
+function restoreFrom(o){
+  const st = o && o.app === 'venova-studio' ? o.state : (o && o.days ? o : null); if (!st || !st.days) throw new Error('bad');
+  const who = o.profile && o.profile.name ? o.profile.name : 'this backup';
+  openSheet(`<h2>Restore ${esc(who)}'s progress?</h2><p>It replaces everything saved for <b>${esc(App.profile.name)}</b> on this device: ${Object.values(st.days).filter(x => x.done).length} days done, ${(st.log || []).reduce((a, e) => a + (e.min || 0), 0)} minutes logged.</p>
+    <div class="row" style="margin-top:12px"><button class="btn" id="rsYes">Replace</button>${o.profile && o.profile.name && o.profile.name !== App.profile.name ? `<button class="btn ghost" id="rsNew">Add as new player "${esc(o.profile.name)}"</button>` : ''}<button class="btn ghost" id="rsNo">Cancel</button></div>`);
+  $('#rsNo').addEventListener('click', closeSheet);
+  $('#rsYes').addEventListener('click', () => { App.state = Object.assign(freshState(), st); if (!App.state.log) App.state.log = []; saveState(); App.selDay = null; renderAll(); closeSheet(); toast('Progress restored'); });
+  const nw = $('#rsNew'); if (nw) nw.addEventListener('click', () => { const nid = Profiles.create(o.profile.name, o.profile.color || COLORS[1], null); LS.set('vs.p.' + nid, Object.assign(freshState(), st)); finishSwitch(nid); });
+}
+function renderBackupStatus(){ const el = $('#saveStatus'); if (!el) return; const when = App.state.updatedAt ? new Date(App.state.updatedAt).toLocaleString(undefined, { weekday: 'short', hour: '2-digit', minute: '2-digit' }) : 'no changes yet'; el.textContent = (App.standalone ? 'Saved in the Home Screen app' : 'Saved in this browser') + (App.cloud.ok ? ' and synced to your Claude account' : '') + ' · last change: ' + when + '.'; }
+function renderSettings(){
+  $('#settingsCard').innerHTML = `<h2>Settings</h2>
+    <div class="row" style="margin-top:8px"><label class="small muted">A4 pitch <input type="number" id="setA4" min="430" max="450" value="${App.a4}" style="width:80px"> Hz</label>
+    <label class="small muted">Fingering <select id="setSystem"><option value="german" ${App.system === 'german' ? 'selected' : ''}>German (as shipped)</option><option value="baroque" ${App.system === 'baroque' ? 'selected' : ''}>Baroque</option></select></label></div>
+    <div class="row" style="margin-top:10px"><button class="btn sm ghost" id="managePlayers">Players</button><button class="btn sm danger" id="resetBtn">Reset ${esc(App.profile.name)}'s progress</button></div>
+    <p class="small muted" style="margin-top:10px">Version ${APP_VERSION}. Sounds come from your phone's speaker; if the tones are silent on an iPhone, flip the ring/silent switch or turn the volume up.</p>`;
+  $('#setA4').addEventListener('change', e => { const v = Math.min(450, Math.max(430, +e.target.value || 440)); App.a4 = v; $('#a4Input').value = v; savePrefs(); });
+  $('#setSystem').addEventListener('change', e => { App.system = e.target.value; savePrefs(); renderNotes(); });
+  $('#managePlayers').addEventListener('click', playersSheet);
+  $('#resetBtn').addEventListener('click', () => { const b = $('#resetBtn'); if (b.dataset.sure) { App.state = freshState(); saveState(); App.selDay = null; renderAll(); toast('Progress reset'); } else { b.dataset.sure = '1'; b.textContent = 'Tap again to confirm'; setTimeout(() => { const bb = $('#resetBtn'); if (bb) { delete bb.dataset.sure; bb.textContent = 'Reset ' + App.profile.name + '\'s progress'; } }, 3000); } });
+}
+
+/* ---------- boot ---------- */
+const APP_VERSION = '2026.11.07-dc9b';
+function renderAll(){ renderToday(); renderNotes(); renderSongList(); renderEcho(); renderDronePad(); renderPlan(); }
+loadPrefs(); migrateV1();
+if (!Profiles.list().length) { Profiles.create('Hassan', COLORS[0], null); }
+loadProfile(LS.get('vs.active'));
+$('#a4Input').value = App.a4;
+renderStaticStart();
+renderAll();
+const startView = location.hash.replace('#', ''); show(['start','notes','songs','tuner','plan'].includes(startView) ? startView : 'start', { keepScroll: true });
+initCloud();
+if (/demo=song/.test(location.search)) openSong('ode-to-joy');
+if (/demo=players/.test(location.search)) playersSheet();
+if (window.matchMedia) { try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { renderAll(); renderBasics('C4'); }); } catch (e) {} }
+new MutationObserver(() => { renderAll(); renderBasics('C4'); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+document.addEventListener('visibilitychange', () => { if (document.hidden) { stopPlayer(); if (Metro.running) Metro.stop(); if (silentEl) silentEl.pause(); } else { if (Timer.id || LT.stream) keepAwake(true); } });
+try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {}); } catch (e) {}
+if ('serviceWorker' in navigator && /^https?:/.test(location.protocol) && !App.inFrame) {
+  window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').then(reg => { reg.addEventListener('updatefound', () => { const nw = reg.installing; if (!nw) return; nw.addEventListener('statechange', () => { if (nw.state === 'installed' && navigator.serviceWorker.controller) toast('Updated: close and reopen for the new version'); }); }); }).catch(() => {}); });
+}
+})();
+</script>
+</body>
+</html>
